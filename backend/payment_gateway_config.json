@@ -1,0 +1,11 @@
+{
+  "upi_id": "pushkar.menariya@okhdfcbank",
+  "payee_name": "PUSHKAR MENARIYA",
+  "bank_account": "50200084729104",
+  "ifsc_code": "HDFC0001245",
+  "bank_name": "HDFC Bank Ltd",
+  "qr_image_base64": "",
+  "min_deposit_inr": 500.0,
+  "is_live_configured": true,
+  "last_updated": "18-Oct-2026 12:39 IST"
+}

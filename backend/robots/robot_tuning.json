@@ -1,0 +1,62 @@
+{
+  "AUTO_AI_SELECTOR": {
+    "robot_id": "AUTO_AI_SELECTOR",
+    "name": "\ud83e\udde0 Ramya Master AI (1-Click Full Automatic)",
+    "market": "Omni-Market (Crypto, MCX, NSE, Forex)",
+    "stop_loss_pct": 0.6,
+    "take_profit_ratio": 2.8,
+    "max_leverage": 200,
+    "risk_per_trade_pct": 20.0,
+    "trailing_breakeven_enabled": true,
+    "execution_cycle_sec": 3.0,
+    "status": "RUNNING"
+  },
+  "RAMYA_CRYPTO_VELOCITY": {
+    "robot_id": "RAMYA_CRYPTO_VELOCITY",
+    "name": "\u26a1 Ramya Crypto Velocity (BTC & ETH 24/7)",
+    "market": "Global Crypto Derivatives (Delta 200x)",
+    "stop_loss_pct": 0.6,
+    "take_profit_ratio": 2.8,
+    "max_leverage": 200,
+    "risk_per_trade_pct": 20.0,
+    "trailing_breakeven_enabled": true,
+    "execution_cycle_sec": 3.0,
+    "status": "RUNNING"
+  },
+  "RAMYA_TITAN_MCX": {
+    "robot_id": "RAMYA_TITAN_MCX",
+    "name": "\ud83e\ude99 Ramya Titan MCX (Gold, Silver, Crude)",
+    "market": "MCX Commodities & Precious Metals",
+    "stop_loss_pct": 0.7,
+    "take_profit_ratio": 2.5,
+    "max_leverage": 10,
+    "risk_per_trade_pct": 18.0,
+    "trailing_breakeven_enabled": true,
+    "execution_cycle_sec": 5.0,
+    "status": "STANDBY_ACTIVE"
+  },
+  "RAMYA_NIFTY_SNIPER": {
+    "robot_id": "RAMYA_NIFTY_SNIPER",
+    "name": "\ud83c\udfaf Ramya Nifty & BankNifty Sniper",
+    "market": "NSE Equities & Index F&O",
+    "stop_loss_pct": 0.5,
+    "take_profit_ratio": 2.5,
+    "max_leverage": 5,
+    "risk_per_trade_pct": 15.0,
+    "trailing_breakeven_enabled": true,
+    "execution_cycle_sec": 5.0,
+    "status": "STANDBY_ACTIVE"
+  },
+  "RAMYA_FOREX_ALPHA": {
+    "robot_id": "RAMYA_FOREX_ALPHA",
+    "name": "\ud83c\udf10 Ramya Forex Alpha (EURUSD, GBPUSD)",
+    "market": "Global Forex & Spot Currency",
+    "stop_loss_pct": 0.4,
+    "take_profit_ratio": 3.0,
+    "max_leverage": 100,
+    "risk_per_trade_pct": 12.0,
+    "trailing_breakeven_enabled": true,
+    "execution_cycle_sec": 5.0,
+    "status": "STANDBY_ACTIVE"
+  }
+}

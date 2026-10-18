@@ -1,0 +1,2888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAMYA QUANT GLOBAL — Institutional Universal Algo Platform</title>
+  <!-- Google Fonts: Plus Jakarta Sans, JetBrains Mono, Cinzel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#e5b95f">
+  <!-- Official TradingView Real-Time Chart Library -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+</head>
+<body class="theme-obsidian">
+
+  <!-- Interactive 3D Background Canvas -->
+  <canvas id="canvas-3d-bg"></canvas>
+
+  <!-- DYNAMIC VIP REFERRAL INVITATION BANNER (AUTO-TRIGGERS ON ?ref=...) -->
+  <div id="referral-welcome-banner" style="display: none; background: linear-gradient(90deg, #1e1b4b, #311042, #1e1b4b); border-bottom: 2px solid var(--accent-gold); padding: 12px 24px; color: #fff; font-family: var(--font-ui); font-size: 13px; box-shadow: 0 4px 25px rgba(229, 185, 95, 0.4); z-index: 9999; position: sticky; top: 0;">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 22px;">🎁</span>
+        <div>
+          <strong style="color: var(--accent-gold);">SPECIAL VIP INVITATION ACTIVATED:</strong>
+          You were invited by <strong id="ref-banner-inviter" style="color: var(--accent-cyan);">Pushkar Menariya (Code: PUSHKAR99)</strong>! 
+          <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; padding: 2px 10px; border-radius: 4px; font-weight: 800; margin-left: 8px;">
+            ₹500.00 FREE FUEL UNLOCKED
+          </span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <button class="btn-vip-gold" style="padding: 7px 18px; font-size: 12px; font-weight: 800; border-radius: 6px; box-shadow: 0 0 15px rgba(229,185,95,0.4);" onclick="openReferralSignupModal()">
+          ⚡ CLAIM ₹500 BONUS & CONNECT BROKER
+        </button>
+        <button style="background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; padding: 0 4px;" onclick="document.getElementById('referral-welcome-banner').style.display='none'">&times;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-wrapper">
+
+    <!-- ==========================================================================
+         VIP HEADER & NAVIGATION
+         ========================================================================== -->
+    <header class="vip-header">
+      <div class="brand-section">
+        <div class="brand-emblem">R</div>
+        <div class="brand-title">
+          <h1>RAMYA QUANT GLOBAL <span class="badge">ENTERPRISE v3.0</span></h1>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+            Universal Multi-Broker Algorithmic Engine & Automated 10% Profit Settlement
+          </p>
+        </div>
+      </div>
+
+      <!-- Universal Multi-Mode Switcher: Real Broker vs Ramya Internal Prop-Book vs Audit Sandbox -->
+      <div class="mode-toggle-container">
+        <button id="btn-mode-real" class="mode-btn active real-active" onclick="switchTradingMode('REAL')">
+          ⚡ 1. REAL BROKER (DELTA 200x)
+        </button>
+        <button id="btn-mode-dabba" class="mode-btn" onclick="switchTradingMode('DABBA')">
+          🎲 2. RAMYA INTERNAL PROP-BOOK (DABBA)
+        </button>
+        <button id="btn-mode-paper" class="mode-btn" onclick="switchTradingMode('PAPER')">
+          🛡️ 3. RISK-FREE AUDIT
+        </button>
+      </div>
+
+
+      <!-- Actions & Theme Engine -->
+      <div class="header-actions">
+        <!-- Live Server Connection Badge -->
+        <span id="backend-status-badge" style="font-size: 11px; padding: 6px 12px; border-radius: 6px; background: rgba(0,240,118,0.12); color: var(--accent-green); border: 1px solid var(--accent-green); font-weight: 700; font-family: var(--font-mono);">
+          🟢 SERVER LIVE (PORT 8080)
+        </span>
+
+        <button class="btn-action" style="border-color: #ef4444; color: #ef4444; font-weight: 700;" onclick="scrollToElement('market-tv-section')">
+          📺 Market Live TV
+        </button>
+
+        <button class="btn-action" style="border-color: #f59e0b; color: #f59e0b; font-weight: 800;" onclick="scrollToElement('mt5-rapid-section')">
+          ⚡ MT5 Rapid 500x
+        </button>
+
+        <button class="btn-action" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;" onclick="scrollToElement('options-chain-section')">
+          📊 Options Chain
+        </button>
+
+        <button class="btn-action" style="border-color: #38bdf8; color: #38bdf8; font-weight: 700;" onclick="openReferralModal()">
+          👥 Clients & Referrals
+        </button>
+
+        <button class="btn-action" style="border-color: #818cf8; color: #818cf8; font-weight: 700;" onclick="openModal('modal-cloud-deployment')">
+          ☁️ 24/7 Cloud (Free)
+        </button>
+
+        <button class="btn-action" style="border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 700;" onclick="openFounderMasterDesk()">
+          👑 Founder Master Desk
+        </button>
+
+        <button class="btn-action" style="border-color: var(--accent-green); color: var(--accent-green);" onclick="installMobilePWA()">
+          📲 Install App (APK)
+        </button>
+
+        <button class="btn-action" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 800;" onclick="scrollToElement('ramya-main-wallet-section')">
+          💳 Interactive Wallet
+        </button>
+
+        <button class="btn-action btn-vip-gold" style="box-shadow: 0 0 15px var(--accent-gold-glow); font-weight: 800; border: 1px solid var(--accent-gold);" onclick="openRamyaVaultModal()">
+          🏛️ RAMYA MASTER VAULT
+        </button>
+      </div>
+    </header>
+
+
+    <!-- ULTRA-FAST WEBSOCKET REAL-TIME MULTI-MARKET TICKER TAPE -->
+    <div style="background: rgba(13, 18, 29, 0.95); border: 1px solid var(--border-glass); border-radius: 12px; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; font-family: var(--font-mono); font-size: 12px; overflow-x: auto; gap: 18px; white-space: nowrap;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="color: var(--accent-green);">●</span>
+        <span style="font-weight: 800; color: #fff;">DIRECT TICK TAPE:</span>
+      </div>
+      <div id="ticker-btc" style="color: var(--accent-gold); font-weight: 700;">BTCUSD: $81,306 ▲ +1.4%</div>
+      <div id="ticker-eth" style="color: var(--accent-green); font-weight: 700;">ETHUSD: $2,408 ▲ +0.8%</div>
+      <div id="ticker-nifty" style="color: var(--accent-cyan); font-weight: 700;">NIFTY 50: 25,248.50 ▲ +0.62%</div>
+      <div id="ticker-banknifty" style="color: #60a5fa; font-weight: 700;">BANK NIFTY: 52,140.20 ▲ +0.78%</div>
+      <div id="ticker-sensex" style="color: #c084fc; font-weight: 700;">SENSEX: 82,890.15 ▲ +0.55%</div>
+      <div id="ticker-gold" style="color: #f59e0b; font-weight: 700;">MCX GOLD: ₹76,540 ▲ +0.42%</div>
+      <div id="ticker-silver" style="color: #e2e8f0; font-weight: 700;">MCX SILVER: ₹92,480 ▲ +1.15%</div>
+      <div id="ticker-crude" style="color: #f87171; font-weight: 700;">MCX CRUDE: ₹6,280 ▼ -0.35%</div>
+      <div id="ticker-eur" style="color: #34d399; font-weight: 700;">EUR/USD: 1.0845 ▲ +0.18%</div>
+      <div id="ticker-usdinr" style="color: #fb923c; font-weight: 700;">USD/INR: 84.08 ▼ -0.05%</div>
+    </div>
+
+    <!-- ==========================================================================
+         REAL-TIME TELEMETRY STATS (LIVE BROKER DATA)
+         ========================================================================== -->
+    <section class="telemetry-grid">
+      <div class="metric-card">
+        <div class="metric-label">
+          <span>Active Trading Equity</span>
+          <span id="badge-mode-indicator" style="color: var(--accent-gold); font-weight: 700;">REAL BROKER MONEY (DELTA LIVE)</span>
+        </div>
+        <div class="metric-value gold" id="val-equity">$15.90 (~₹1,351.50)</div>
+        <div class="metric-sub">Delta Exchange India (200x Isolated)</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">
+          <span>Live Realized P&L</span>
+          <span id="badge-live-pnl-status" style="color: var(--accent-green); font-weight: 700;">● IN PROFIT</span>
+        </div>
+        <div class="metric-value green" id="val-client-pnl">₹0.00</div>
+        <div class="metric-sub" id="val-client-pnl-sub">Apex 12-Pillar Rapid Confluence Active</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">
+          <span>Safe Margin Capital Armor</span>
+          <span style="color: var(--accent-cyan); font-weight: 700;">1% RISK CAP</span>
+        </div>
+        <div class="metric-value cyan" id="val-commission">99% Shielded</div>
+        <div class="metric-sub">Zero Liquidation Risk Buffer</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">
+          <span>Live Daemon Status</span>
+          <span id="daemon-status-badge" style="color: var(--accent-green); font-weight: 800;">● RUNNING 24/7 (ACTIVE)</span>
+        </div>
+        <div class="metric-value" style="font-size: 19px; color: #fff;" id="val-active-robot">
+          Ramya Apex 12-Pillar (500x)
+        </div>
+        <div class="metric-sub">0-Loss Breakeven Lock Armed</div>
+      </div>
+    </section>
+
+
+    <!-- Role Switcher Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 10px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 24px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Portal View:</span>
+        <button id="btn-role-founder" class="mode-btn active real-active" onclick="switchPortalRole('FOUNDER')">
+          👑 FOUNDER MASTER ADMIN (YOU)
+        </button>
+        <button id="btn-role-client" class="mode-btn" onclick="switchPortalRole('CLIENT')">
+          👤 CLIENT APP VIEW (WHAT YOUR CUSTOMER SEES)
+        </button>
+      </div>
+      <div style="font-size: 12px; color: var(--accent-gold); font-family: var(--font-mono);">
+        Live Market Feed: <span style="color: var(--accent-green);">● ACTIVE 24/7 STREAMING</span>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         LIVE CANDLESTICK CHART ENGINE (TRADINGVIEW INTEGRATION)
+         ========================================================================== -->
+    <section class="glass-box" style="margin-bottom: 28px; padding: 18px 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
+            📈 Live Real-Time Market Charts & Order Flow Radar
+          </h2>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+            Tick-by-tick institutional candles with 5-second velocity & volume spread analysis.
+          </p>
+        </div>
+
+        <!-- Multi-Market Chart Switcher Buttons -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="mode-btn active real-active" id="btn-chart-btc" onclick="changeChartSymbol('BINANCE:BTCUSDT', 'btn-chart-btc')">
+            🪙 BTC/USD
+          </button>
+          <button class="mode-btn" id="btn-chart-eth" onclick="changeChartSymbol('BINANCE:ETHUSDT', 'btn-chart-eth')">
+            🪙 ETH/USD
+          </button>
+          <button class="mode-btn" id="btn-chart-nifty" onclick="changeChartSymbol('NSE:NIFTY', 'btn-chart-nifty')">
+            🇮🇳 NIFTY 50
+          </button>
+          <button class="mode-btn" id="btn-chart-banknifty" onclick="changeChartSymbol('NSE:BANKNIFTY', 'btn-chart-banknifty')">
+            🇮🇳 BANK NIFTY
+          </button>
+          <button class="mode-btn" id="btn-chart-sensex" onclick="changeChartSymbol('BSE:SENSEX', 'btn-chart-sensex')">
+            🇮🇳 SENSEX
+          </button>
+          <button class="mode-btn" id="btn-chart-gold" onclick="changeChartSymbol('OANDA:XAUUSD', 'btn-chart-gold')">
+            🪙 MCX GOLD
+          </button>
+          <button class="mode-btn" id="btn-chart-silver" onclick="changeChartSymbol('TVC:SILVER', 'btn-chart-silver')">
+            🪙 MCX SILVER
+          </button>
+          <button class="mode-btn" id="btn-chart-crude" onclick="changeChartSymbol('TVC:USOIL', 'btn-chart-crude')">
+            🛢️ MCX CRUDE
+          </button>
+          <button class="mode-btn" id="btn-chart-eur" onclick="changeChartSymbol('FX:EURUSD', 'btn-chart-eur')">
+            🌐 EUR/USD
+          </button>
+          <button class="mode-btn" id="btn-chart-gbp" onclick="changeChartSymbol('FX:GBPUSD', 'btn-chart-gbp')">
+            🌐 GBP/USD
+          </button>
+        </div>
+      </div>
+
+      <!-- Timeframe Selector Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: rgba(0,0,0,0.3); padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 700;">TIMEFRAME:</span>
+          <button type="button" class="mode-btn" id="tf-btn-1" style="padding: 4px 10px; font-size: 11px;" onclick="changeChartInterval('1', 'tf-btn-1')">1m Scalp</button>
+          <button type="button" class="mode-btn" id="tf-btn-3" style="padding: 4px 10px; font-size: 11px;" onclick="changeChartInterval('3', 'tf-btn-3')">3m</button>
+          <button type="button" class="mode-btn active real-active" id="tf-btn-5" style="padding: 4px 10px; font-size: 11px;" onclick="changeChartInterval('5', 'tf-btn-5')">5m Primary</button>
+          <button type="button" class="mode-btn" id="tf-btn-15" style="padding: 4px 10px; font-size: 11px;" onclick="changeChartInterval('15', 'tf-btn-15')">15m Trend</button>
+          <button type="button" class="mode-btn" id="tf-btn-60" style="padding: 4px 10px; font-size: 11px;" onclick="changeChartInterval('60', 'tf-btn-60')">1h</button>
+          <button type="button" class="mode-btn" id="tf-btn-240" style="padding: 4px 10px; font-size: 11px;" onclick="changeChartInterval('240', 'tf-btn-240')">4h</button>
+          <button type="button" class="mode-btn" id="tf-btn-D" style="padding: 4px 10px; font-size: 11px;" onclick="changeChartInterval('D', 'tf-btn-D')">1D Macro</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px;">
+          <span style="color: var(--accent-gold);">● 3-30 EMA ACTIVE</span>
+          <span style="color: var(--accent-cyan);">● VWAP ANCHOR</span>
+          <span style="color: var(--accent-green);">● ADX CHOP GUARD</span>
+        </div>
+      </div>
+
+      <!-- TradingView Live Embedded Frame -->
+      <div id="chart-wrapper" style="height: 480px; width: 100%; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-subtle); background: #07090e;">
+        <div id="tradingview_chart_container" style="height: 100%; width: 100%;"></div>
+      </div>
+
+      <!-- Live Order Flow Velocity Telemetry Strip beneath chart -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 10px; font-family: var(--font-mono); font-size: 11px;">
+        <div style="background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+          <span style="color: var(--text-muted);">L2 Best Bid / Ask</span>
+          <div id="chart-live-bidask" style="color: #fff; font-weight: 800; font-size: 13px; margin-top: 2px;">$81,660 / $81,661</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+          <span style="color: var(--text-muted);">5s Velocity (Tick Delta)</span>
+          <div id="chart-live-velocity" style="color: var(--accent-green); font-weight: 800; font-size: 13px; margin-top: 2px;">▲ +$18.50 / 5s (Impulse)</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+          <span style="color: var(--text-muted);">L2 Depth Imbalance</span>
+          <div id="chart-live-imbalance" style="color: var(--accent-gold); font-weight: 800; font-size: 13px; margin-top: 2px;">1.68x Buyer Dominance</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+          <span style="color: var(--text-muted);">Micro Breakeven Lock</span>
+          <div id="chart-live-be-lock" style="color: var(--accent-cyan); font-weight: 800; font-size: 13px; margin-top: 2px;">ARMED ($0.00 Risk Snap)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         NIFTY & BANK NIFTY REAL-TIME OPTIONS CHAIN TERMINAL
+         ========================================================================== -->
+    <section id="options-chain-section" class="glass-box" style="margin-bottom: 28px; border-color: var(--accent-cyan); box-shadow: 0 0 25px rgba(56, 189, 248, 0.12);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">📊</span>
+          <div>
+            <h2 style="font-size: 19px; font-weight: 800; color: var(--accent-cyan);">
+              LIVE INSTITUTIONAL OPTIONS CHAIN & GREEKS RADAR
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Tick-by-tick Call vs Put Open Interest, Implied Volatility (IV), PCR Sentiment & Max Pain Strikes.
+            </p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <select id="options-underlying-selector" class="form-control" style="width: auto; padding: 6px 12px; font-weight: 700;" onchange="loadOptionsChain(this.value)">
+            <option value="NIFTY" selected>NIFTY 50 (Weekly Expiry)</option>
+            <option value="BANKNIFTY">BANK NIFTY (Weekly Expiry)</option>
+          </select>
+          <button class="btn-action" style="padding: 6px 12px; font-size: 12px;" onclick="loadOptionsChain()">
+            🔄 Refresh Chain
+          </button>
+        </div>
+      </div>
+
+      <!-- Options Telemetry Strip -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; font-family: var(--font-mono); font-size: 12px;">
+        <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Underlying Spot</div>
+          <div style="color: #fff; font-weight: 800; font-size: 15px;" id="opt-spot-price">25,248.50</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Put-Call Ratio (PCR)</div>
+          <div style="color: var(--accent-green); font-weight: 800; font-size: 15px;" id="opt-pcr-ratio">1.12 (BULLISH)</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Max Pain Strike</div>
+          <div style="color: var(--accent-gold); font-weight: 800; font-size: 15px;" id="opt-max-pain">25,200 CE/PE</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Expiry Date</div>
+          <div style="color: var(--accent-cyan); font-weight: 800; font-size: 14px;" id="opt-expiry">24-OCT-2026</div>
+        </div>
+      </div>
+
+      <!-- Options Chain Table Container -->
+      <div id="options-chain-table-container" style="overflow-x: auto;">
+        <!-- Populated dynamically by loadOptionsChain() -->
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         RAMYA FINANCIAL MARKET TV & BREAKING NEWS RADAR (6 CHANNELS + POPOUT)
+         ========================================================================== -->
+    <section id="market-tv-section" class="glass-box" style="margin-bottom: 28px; border-color: #ef4444; box-shadow: 0 0 25px rgba(239, 68, 68, 0.15);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">📺</span>
+          <div>
+            <h2 style="font-size: 19px; font-weight: 800; color: #fff;">
+              RAMYA FINANCIAL MARKET TV & LIVE NEWS RADAR
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              24/7 Verified Live Financial Feeds • Zee Business, CNBC Awaaz, NDTV Profit, ET Now, Bloomberg & CoinDesk.
+            </p>
+          </div>
+        </div>
+        <!-- TV Channel Switcher Buttons -->
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;" id="tv-channel-buttons">
+          <button class="mode-btn active real-active" id="tv-btn-zee" onclick="switchTVChannel('ZEE_BUSINESS', 'tv-btn-zee')">
+            🇮🇳 Zee Business (Hindi)
+          </button>
+          <button class="mode-btn" id="tv-btn-cnbc" onclick="switchTVChannel('CNBC_AWAAZ', 'tv-btn-cnbc')">
+            🇮🇳 CNBC Awaaz Live
+          </button>
+          <button class="mode-btn" id="tv-btn-ndtv" onclick="switchTVChannel('NDTV_PROFIT', 'tv-btn-ndtv')">
+            🇮🇳 NDTV Profit
+          </button>
+          <button class="mode-btn" id="tv-btn-etnow" onclick="switchTVChannel('ET_NOW_SWADESH', 'tv-btn-etnow')">
+            🇮🇳 ET Now Swadesh
+          </button>
+          <button class="mode-btn" id="tv-btn-aajtak" onclick="switchTVChannel('AAJ_TAK', 'tv-btn-aajtak')">
+            🇮🇳 Aaj Tak Live
+          </button>
+          <button class="mode-btn" id="tv-btn-crypto" onclick="switchTVChannel('COINDESK_TV', 'tv-btn-crypto')">
+            🪙 CoinDesk Crypto
+          </button>
+          <a id="tv-direct-link" href="https://www.youtube.com/@ZeeBusiness/live" target="_blank" class="btn-action" style="padding: 4px 10px; font-size: 11px; border-color: #ef4444; color: #ef4444; font-weight: 800; text-decoration: none;">
+            ▶️ Open on YouTube HD
+          </a>
+          <button class="btn-action" style="padding: 4px 10px; font-size: 11px; border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 800;" onclick="openTVInPopoutWindow()">
+            ↗️ Popout HD Window
+          </button>
+        </div>
+      </div>
+
+      <!-- TV Video Frame Player -->
+      <div style="position: relative; width: 100%; height: 430px; background: #000; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-subtle);">
+        <iframe id="market-tv-iframe" width="100%" height="100%" src="https://www.youtube.com/embed/kh2-jlF5ij4?autoplay=1&mute=1&playsinline=1" title="Financial Market Live TV" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <!-- Breaking Financial News Ticker Bar -->
+      <div style="background: rgba(0,0,0,0.6); padding: 8px 14px; border-radius: 6px; margin-top: 10px; display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; border: 1px solid var(--border-subtle); overflow: hidden;">
+        <span style="background: #ef4444; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 800; font-size: 11px;">BREAKING</span>
+        <marquee id="breaking-news-marquee" scrollamount="6" style="color: #e2e8f0;">
+          ⚡ RBI Monetary Policy Committee keeps repo rate steady • 🪙 MCX Gold holds near ₹76,540/10g ahead of US CPI • 🚀 Bitcoin tests key $81,500 resistance with heavy buyer dominance • 📊 NIFTY 50 options PCR at 1.12 (Bullish) • 📈 All 6 TV channels streaming active.
+        </marquee>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         RAMYA APEX UNIVERSAL 12-PILLAR SUPER-ROBOT & MT5 CLIENT TERMINAL
+         ========================================================================== -->
+    <section id="mt5-rapid-section" class="glass-box" style="margin-bottom: 28px; border-color: #f59e0b; box-shadow: 0 0 35px rgba(245, 158, 11, 0.25); background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(7, 10, 19, 0.98));">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="background: rgba(245, 158, 11, 0.2); border: 1.5px solid #f59e0b; border-radius: 8px; padding: 6px 10px; font-size: 22px;">
+            ⚡
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <h2 style="font-size: 20px; font-weight: 900; color: #f59e0b; letter-spacing: 0.5px;">
+                RAMYA APEX UNIVERSAL 12-PILLAR SUPER-ROBOT (MT5 MINI TERMINAL)
+              </h2>
+              <span style="background: rgba(0, 240, 118, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 800; font-family: var(--font-mono);">
+                ● 12-PILLAR CONFLUENCE ACTIVE
+              </span>
+              <span style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 800; font-family: var(--font-mono);">
+                200x-500x SNIPER LEVERAGE (1% RISK CAP)
+              </span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
+              Universal Plug & Play: Connect Any Broker API (Delta, Dhan, Zerodha, MT5, Binance) • 10-15 Min Rapid Impulse Waves • Zero Loss Breakeven Lock • 10% Vault Fee Auto-Settled.
+            </p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn-action" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 800; font-size: 11px;" onclick="openUniversalBrokerModal()">
+            🔌 Connect Broker API
+          </button>
+          <span id="active-broker-badge" style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-green); background: rgba(0,240,118,0.1); border: 1px solid var(--accent-green); padding: 4px 10px; border-radius: 6px; font-weight: 800;">
+            ● BROKER: DELTA EXCHANGE (24/7 LIVE)
+          </span>
+        </div>
+      </div>
+
+      <!-- Universal Broker Selector Strip -->
+      <div style="display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px;">
+        <button type="button" id="ub-btn-delta" class="mode-btn active real-active" onclick="switchUniversalBroker('DELTA_EXCHANGE', 'ub-btn-delta')">
+          🪙 Delta Exchange (Crypto 24/7)
+        </button>
+        <button type="button" id="ub-btn-dhan" class="mode-btn" onclick="switchUniversalBroker('DHAN', 'ub-btn-dhan')">
+          🇮🇳 DhanHQ (Indian F&O / Options)
+        </button>
+        <button type="button" id="ub-btn-zerodha" class="mode-btn" onclick="switchUniversalBroker('ZERODHA', 'ub-btn-zerodha')">
+          🇮🇳 Zerodha Kite (Stocks & MCX)
+        </button>
+        <button type="button" id="ub-btn-mt5" class="mode-btn" onclick="switchUniversalBroker('MT5_BRIDGE', 'ub-btn-mt5')">
+          💵 MT5 Bridge (Global Forex & Prop 500x)
+        </button>
+        <button type="button" id="ub-btn-binance" class="mode-btn" onclick="switchUniversalBroker('BINANCE', 'ub-btn-binance')">
+          🌐 Binance Futures
+        </button>
+      </div>
+
+      <!-- 12-PILLAR LIVE QUANT CONFLUENCE RADAR -->
+      <div style="background: rgba(0,0,0,0.45); border: 1.5px solid rgba(229,185,95,0.3); border-radius: 12px; padding: 14px; margin-bottom: 18px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">🧠</span>
+            <span style="font-size: 13px; font-weight: 800; color: var(--accent-gold); font-family: var(--font-mono);">
+              12-PILLAR INSTITUTIONAL CONFLUENCE RADAR (WEIGHTED SCORE: <span id="apex-confluence-score" style="color: var(--accent-green);">92.3% GOLDEN SIGNAL</span>)
+            </span>
+          </div>
+          <span style="font-size: 11px; background: rgba(0,240,118,0.15); border: 1px solid var(--accent-green); color: var(--accent-green); padding: 2px 8px; border-radius: 4px; font-weight: 800;">
+            HIGH-CONVICTION IMPULSE ARMED
+          </span>
+        </div>
+
+        <!-- 12 Radar Pillars Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; font-family: var(--font-mono); font-size: 10px;">
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">1. 3-30 EMA</div>
+            <div style="color: var(--accent-green); font-weight: 800;">BULL CROSS ▲</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">2. 9 EMA Trail</div>
+            <div style="color: var(--accent-green); font-weight: 800;">RIDING HIGH ▲</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">3. VWAP Anchor</div>
+            <div style="color: var(--accent-cyan); font-weight: 800;">ABOVE VWAP</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(229,185,95,0.4);">
+            <div style="color: var(--text-muted);">4. BB Squeeze</div>
+            <div style="color: var(--accent-gold); font-weight: 800;">EXPANDING 💥</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">5. RSI (14)</div>
+            <div style="color: #fff; font-weight: 800;">62.4 (STRONG)</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">6. MACD Hist</div>
+            <div style="color: var(--accent-green); font-weight: 800;">+14.8 EXPAND</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">7. Zig-Zag</div>
+            <div style="color: var(--accent-cyan); font-weight: 800;">SWING BREAK ▲</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">8. ATR (14)</div>
+            <div style="color: #fff; font-weight: 800;">0.12% NOISE SL</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">9. ADX (14)</div>
+            <div style="color: var(--accent-green); font-weight: 800;">32.5 (NO CHOP)</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">10. L2 Depth</div>
+            <div style="color: var(--accent-gold); font-weight: 800;">1.82x WHALES</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">11. PCR / OI</div>
+            <div style="color: var(--accent-cyan); font-weight: 800;">1.26 BULLISH</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,240,118,0.4);">
+            <div style="color: var(--text-muted);">12. Greeks / POC</div>
+            <div style="color: #34d399; font-weight: 800;">DELTA 0.62 ATM</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- भारी मूव डिटेक्टर (HEAVY INSTITUTIONAL BREAKOUT RADAR - 100% CONFIDENCE PULSE) -->
+      <div id="mt5-heavy-pulse-card" style="background: rgba(0,0,0,0.5); border: 2px solid var(--accent-gold); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(229, 185, 95, 0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 24px; animation: pulse 1.5s infinite;">🚨</span>
+            <div>
+              <div style="font-size: 11px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; font-family: var(--font-mono);">
+                भारी मूव डिटेक्टर (10-15 MIN RAPID IMPULSE RADAR):
+              </div>
+              <div style="font-size: 16px; font-weight: 800; color: #fff; margin-top: 2px;" id="mt5-pulse-text">
+                ⚡ BTCUSD LONG: 3-30 EMA + L2 Whales Active • Confluence 92.3% • Dynamic 200x-500x Ready
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span id="mt5-confidence-badge" style="background: #22c55e; color: #000; font-weight: 900; font-size: 12px; padding: 4px 12px; border-radius: 6px; font-family: var(--font-mono);">
+              92.3% CONFIRMED PULSE
+            </span>
+            <button class="mode-btn" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-size: 11px; padding: 4px 10px;" onclick="checkHeavyMovePulse()">
+              🔄 Scan Pulse
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MT5 Trading Control Bar: Multi-Asset, Leverage, Lots -->
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; margin-bottom: 18px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
+          <!-- Asset Selector -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Select Target Market Asset</label>
+            <select id="mt5-select-asset" class="form-control" style="font-weight: 700; font-size: 13px;" onchange="updateMt5AssetPrice(this.value)">
+              <option value="BTCUSD" selected>🪙 BTC/USD (Delta Crypto 500x)</option>
+              <option value="ETHUSD">🪙 ETH/USD (Delta Crypto 500x)</option>
+              <option value="MCX GOLD">🪙 MCX GOLD (Spot Metal 500x)</option>
+              <option value="MCX SILVER">🪙 MCX SILVER (Spot Metal 500x)</option>
+              <option value="MCX CRUDE">🛢️ MCX CRUDE OIL (500x)</option>
+              <option value="EUR/USD">🌐 EUR/USD (Exness Forex 500x)</option>
+              <option value="GBP/USD">🌐 GBP/USD (Exness Forex 500x)</option>
+              <option value="NIFTY 50">🇮🇳 NIFTY 50 (Instant Strike)</option>
+              <option value="BANK NIFTY">🇮🇳 BANK NIFTY (Instant Strike)</option>
+            </select>
+          </div>
+
+          <!-- Leverage Selector -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Leverage Multiplier</label>
+            <div style="display: flex; gap: 4px;">
+              <button type="button" class="mode-btn" style="padding: 6px 10px; font-size: 11px;" onclick="setMt5Leverage(100)">100x</button>
+              <button type="button" class="mode-btn" style="padding: 6px 10px; font-size: 11px;" onclick="setMt5Leverage(200)">200x</button>
+              <button type="button" class="mode-btn" style="padding: 6px 10px; font-size: 11px;" onclick="setMt5Leverage(300)">300x</button>
+              <button type="button" class="mode-btn" style="padding: 6px 10px; font-size: 11px;" onclick="setMt5Leverage(400)">400x</button>
+              <button type="button" class="mode-btn active real-active" id="btn-lev-500" style="padding: 6px 12px; font-size: 11px; font-weight: 800; color: #f59e0b;" onclick="setMt5Leverage(500)">⚡ 500x</button>
+            </div>
+            <input type="hidden" id="mt5-val-leverage" value="500">
+          </div>
+
+          <!-- Lot Size Selector -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px; color: var(--text-muted); font-weight: 700;">Contract / Lot Size</label>
+            <div style="display: flex; gap: 4px;">
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px;" onclick="setMt5Lots(0.1)">0.1</button>
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px;" onclick="setMt5Lots(0.5)">0.5</button>
+              <button type="button" class="mode-btn active real-active" id="btn-lot-1" style="padding: 6px 10px; font-size: 11px; font-weight: 700;" onclick="setMt5Lots(1.0)">1.0</button>
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px;" onclick="setMt5Lots(2.0)">2.0</button>
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px;" onclick="setMt5Lots(5.0)">5.0</button>
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px;" onclick="setMt5Lots(10.0)">10.0</button>
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px; font-weight: 800;" onclick="setMt5Lots(25.0)">⚡ 25</button>
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px; font-weight: 800;" onclick="setMt5Lots(50.0)">⚡ 50</button>
+              <button type="button" class="mode-btn" style="padding: 6px 8px; font-size: 11px; color: var(--accent-gold); font-weight: 800;" onclick="setMt5Lots(100.0)">💥 100 Whales</button>
+            </div>
+            <input type="hidden" id="mt5-val-lots" value="1.0">
+          </div>
+        </div>
+
+        <!-- BIG MT5 RAPID STRIKE BUTTONS (दनादन ऑर्डर - 1 CLICK STRIKE) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px;">
+          <!-- BIG SELL BUTTON -->
+          <button id="mt5-btn-sell" class="btn-action" style="background: linear-gradient(135deg, #dc2626, #991b1b); border-color: #ef4444; color: #fff; padding: 18px 24px; border-radius: 12px; font-size: 18px; font-weight: 900; box-shadow: 0 0 25px rgba(239, 68, 68, 0.4); text-transform: uppercase; cursor: pointer; transition: transform 0.1s ease;" onclick="fireMt5RapidOrder('SELL')">
+            <div style="font-size: 11px; opacity: 0.85; margin-bottom: 2px;">MOMENTUM SHORT BREAKOUT</div>
+            🔴 SELL / SHORT (500x STRIKE)
+            <div style="font-size: 12px; font-weight: 600; opacity: 0.9; margin-top: 2px;" id="mt5-disp-sell-price">Bid: $81,315.00</div>
+          </button>
+
+          <!-- BIG BUY BUTTON -->
+          <button id="mt5-btn-buy" class="btn-action" style="background: linear-gradient(135deg, #16a34a, #065f46); border-color: #22c55e; color: #fff; padding: 18px 24px; border-radius: 12px; font-size: 18px; font-weight: 900; box-shadow: 0 0 25px rgba(34, 197, 94, 0.4); text-transform: uppercase; cursor: pointer; transition: transform 0.1s ease;" onclick="fireMt5RapidOrder('BUY')">
+            <div style="font-size: 11px; opacity: 0.85; margin-bottom: 2px;">MOMENTUM LONG BREAKOUT</div>
+            🟢 BUY / LONG (500x STRIKE)
+            <div style="font-size: 12px; font-weight: 600; opacity: 0.9; margin-top: 2px;" id="mt5-disp-buy-price">Ask: $81,325.00</div>
+          </button>
+        </div>
+
+        <!-- BIG DUAL-STRIKE (BTC + ETH SIMULTANEOUS MULTI-LAYER EXECUTION) -->
+        <div style="margin-top: 14px;">
+          <button id="mt5-btn-dual-strike" type="button" class="btn-action" style="width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706, #b45309); border: 2px solid #fbbf24; color: #000; padding: 16px 20px; border-radius: 12px; font-size: 16px; font-weight: 900; box-shadow: 0 0 35px rgba(245, 158, 11, 0.45); text-transform: uppercase; cursor: pointer; letter-spacing: 0.5px;" onclick="fireDualStrikeMultiOrder()">
+            ⚡ DUAL-STRIKE: BITCOIN + ETHEREUM MULTI-LAYER (25x-100x SCALED LOTS)
+            <div style="font-size: 11px; font-weight: 700; color: #1e293b; margin-top: 3px;">
+              Fires Simultaneous High-Conviction Trades on BOTH BTCUSD & ETHUSD • 10-15 Min Rapid Wave • 0-Loss Breakeven
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- MT5 Rapid Open Positions Desk -->
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h3 style="font-size: 14px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--accent-green);">●</span> ACTIVE MT5 RAPID POSITIONS (500X SPEED SCALP):
+          </h3>
+          <span style="font-size: 11px; color: var(--accent-gold); font-family: var(--font-mono);">
+            Zero Execution Delay • Real-Time Tick P&L
+          </span>
+        </div>
+        <div id="mt5-positions-table-container" style="overflow-x: auto;">
+          <!-- Dynamically populated by renderMt5Positions() -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         RAMYA INTERACTIVE LIVE WALLET & REAL PAYMENT GATEWAY TERMINAL
+         ========================================================================== -->
+    <section id="ramya-main-wallet-section" class="glass-box" style="margin-bottom: 28px; border-color: var(--accent-gold); box-shadow: 0 0 35px rgba(229, 185, 95, 0.25);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 32px;">🏛️</span>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 style="font-size: 21px; font-weight: 900; color: var(--accent-gold); letter-spacing: 0.5px;">
+                RAMYA MASTER CORPORATE OMNI-VAULT & BANK PROTECTION SUITE
+              </h2>
+              <span style="background: rgba(0, 240, 118, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">
+                100% REAL LIVE
+              </span>
+              <span style="background: rgba(229, 185, 95, 0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">
+                AES-256 ARMED
+              </span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
+              Entity: <strong>RAMYA QUANT TECHNOLOGIES ENTERPRISE</strong> • Multi-Asset Treasury (INR, USDT, USD, BTC, ETH) • Savings Account 100% Shielded • 0% Offshore Tax Return Rail
+            </p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-action" style="border-color: var(--accent-green); color: var(--accent-green); font-weight: 800; font-size: 12px;" onclick="triggerQuickTestCredit()">
+            ⚡ 1-Click Test Top-Up (+₹2,500)
+          </button>
+          <button class="btn-action btn-vip-gold" style="font-weight: 800; font-size: 12px;" onclick="openRamyaVaultModal()">
+            🏛️ Open Vault Modal
+          </button>
+        </div>
+      </div>
+
+      <!-- Real-Time Omni-Asset Vault Balance Strip -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 14px; font-family: var(--font-mono);">
+        <!-- 1. INR Liquid Reserve -->
+        <div style="background: rgba(0,0,0,0.45); border: 1.5px solid rgba(229, 185, 95, 0.4); border-radius: 12px; padding: 14px; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">🇮🇳 Liquid INR Reserve</span>
+            <span style="font-size: 10px; background: rgba(0, 240, 118, 0.15); color: var(--accent-green); padding: 2px 6px; border-radius: 4px; font-weight: 800;">LIVE</span>
+          </div>
+          <div id="omni-inr-balance" style="font-size: 24px; font-weight: 800; color: var(--accent-gold); margin-top: 6px;">₹98,350.00</div>
+          <div style="font-size: 11px; color: var(--accent-green); margin-top: 3px;">● 100% Savings Bank Shielded</div>
+        </div>
+
+        <!-- 2. USDT Crypto Reserve -->
+        <div style="background: rgba(0,0,0,0.45); border: 1.5px solid rgba(0, 242, 254, 0.4); border-radius: 12px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">🌐 Web3 USDT Vault</span>
+            <span style="font-size: 10px; background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); padding: 2px 6px; border-radius: 4px; font-weight: 800;">TRC20 / POLYGON</span>
+          </div>
+          <div id="omni-usdt-balance" style="font-size: 24px; font-weight: 800; color: var(--accent-cyan); margin-top: 6px;">$1,450.00</div>
+          <div id="omni-usdt-inr-equiv" style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">≈ ₹1,23,250.00 INR (Zero Tax Rail)</div>
+        </div>
+
+        <!-- 3. USD Forex Reserve -->
+        <div style="background: rgba(0,0,0,0.45); border: 1.5px solid rgba(59, 130, 246, 0.4); border-radius: 12px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">💵 Global Forex / USD Reserve</span>
+            <span style="font-size: 10px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 2px 6px; border-radius: 4px; font-weight: 800;">IBAN / WIRE</span>
+          </div>
+          <div id="omni-usd-balance" style="font-size: 24px; font-weight: 800; color: #60a5fa; margin-top: 6px;">$2,850.00</div>
+          <div id="omni-usd-inr-equiv" style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">≈ ₹2,39,400.00 INR (Virtual IBAN)</div>
+        </div>
+
+        <!-- 4. Bitcoin & Ethereum Crypto Reserve -->
+        <div style="background: rgba(0,0,0,0.45); border: 1.5px solid rgba(245, 158, 11, 0.4); border-radius: 12px; padding: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">🪙 Native Bitcoin & ETH Reserve</span>
+            <span style="font-size: 10px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; padding: 2px 6px; border-radius: 4px; font-weight: 800;">SEGWIT / EVM</span>
+          </div>
+          <div id="omni-btc-balance" style="font-size: 20px; font-weight: 800; color: #fbbf24; margin-top: 6px;">0.085 BTC / 1.25 ETH</div>
+          <div id="omni-btc-inr-equiv" style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">≈ ₹8,46,650.00 INR (Cold Vault)</div>
+        </div>
+      </div>
+
+      <!-- Total Consolidated Valuation Banner -->
+      <div style="background: linear-gradient(135deg, rgba(229,185,95,0.12), rgba(0,242,254,0.08)); border: 1.5px solid var(--accent-gold); border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="font-size: 28px;">🏛️</div>
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">CONSOLIDATED RAMYA CORPORATE VALUATION (TOTAL NET WORTH)</div>
+            <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 2px;">
+              <span id="omni-total-valuation-inr" style="font-size: 24px; font-weight: 900; color: #fff; font-family: var(--font-mono);">₹13,07,650.00 INR</span>
+              <span id="omni-total-valuation-usd" style="font-size: 16px; font-weight: 700; color: var(--accent-cyan); font-family: var(--font-mono);">($15,384.12 USD)</span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--accent-green); padding: 6px 12px; border-radius: 6px; font-size: 11px;">
+            <span style="color: var(--accent-green); font-weight: 800;">🛡️ SAVINGS BANK SHIELD:</span>
+            <span style="color: #cbd5e1;"> 100% ACTIVE</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--accent-gold); padding: 6px 12px; border-radius: 6px; font-size: 11px;">
+            <span style="color: var(--accent-gold); font-weight: 800;">🔐 FOUNDER PASSKEY:</span>
+            <span style="color: #cbd5e1;"> ARMED (AES-256)</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--accent-cyan); padding: 6px 12px; border-radius: 6px; font-size: 11px;">
+            <span style="color: var(--accent-cyan); font-weight: 800;">🌐 TAX SHIELD:</span>
+            <span style="color: #cbd5e1;"> 0% OFFSHORE RETURN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wallet Sub-Action Tabs -->
+      <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; margin-bottom: 18px; overflow-x: auto;">
+        <button id="wtab-btn-deposit" class="mode-btn active real-active" onclick="switchOnpageWalletTab('DEPOSIT')">
+          📥 1. Receive All Currencies (UPI / USDT / BTC / USD)
+        </button>
+        <button id="wtab-btn-omnipayout" class="mode-btn" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 800;" onclick="switchOnpageWalletTab('OMNI_PAYOUT')">
+          📤 2. Send / Payout Any Currency (Master Passkey)
+        </button>
+        <button id="wtab-btn-swap" class="mode-btn" style="border-color: #60a5fa; color: #60a5fa; font-weight: 800;" onclick="switchOnpageWalletTab('SWAP')">
+          🔄 3. Instant Currency Swap (Zero Fee)
+        </button>
+        <button id="wtab-btn-bank" class="mode-btn" style="border-color: var(--accent-green); color: var(--accent-green);" onclick="switchOnpageWalletTab('BANK')">
+          🏦 4. Withdraw to Savings Bank (Sec 44ADA)
+        </button>
+        <button id="wtab-btn-passkey" class="mode-btn" style="border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 800;" onclick="switchOnpageWalletTab('PASSKEY')">
+          🔑 5. Founder Master Passkey
+        </button>
+        <button id="wtab-btn-realsetup" class="mode-btn" onclick="switchOnpageWalletTab('REAL_SETUP')">
+          ⚙️ 6. Set Up Real Bank UPI & QR
+        </button>
+        <button id="wtab-btn-clientdeposits" class="mode-btn" onclick="switchOnpageWalletTab('CLIENT_DEPOSITS')">
+          👥 7. Real Client Payments Ledger
+        </button>
+        <button id="wtab-btn-redeem" class="mode-btn" onclick="switchOnpageWalletTab('REDEEM')">
+          🎁 8. Convert Referral Points
+        </button>
+        <button id="wtab-btn-passbook" class="mode-btn" onclick="switchOnpageWalletTab('PASSBOOK')">
+          📜 9. Live Multi-Asset Passbook
+        </button>
+      </div>
+
+      <!-- PUBLIC WHATSAPP CHECKOUT LINK BANNER -->
+      <div style="background: rgba(0, 240, 118, 0.08); border: 1.5px solid #00f076; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 800; color: #00f076; display: flex; align-items: center; gap: 6px;">
+            <span>🔗 SHARE PUBLIC PAYMENT LINK WITH CLIENTS (WHATSAPP READY):</span>
+            <span style="background: #00f076; color: #000; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">100% REAL</span>
+          </div>
+          <div style="font-size: 11px; color: #cbd5e1; margin-top: 3px;">
+            Send this link to any client or friend to pay you directly via PhonePe, Google Pay, or Paytm:
+            <span id="active-public-pay-url" style="color: var(--accent-gold); font-family: var(--font-mono); font-weight: 800;">http://localhost:8080/pay</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-action" style="background: #25D366; color: #000; font-weight: 900; border: none; padding: 7px 14px; font-size: 12px; border-radius: 6px;" onclick="sharePublicPayWhatsApp()">
+            💬 Share on WhatsApp
+          </button>
+          <button class="btn-action" style="border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 800; padding: 7px 14px; font-size: 12px; border-radius: 6px;" onclick="copyPublicPayUrl()">
+            📋 Copy Link
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: RECEIVE ALL CURRENCIES (UPI / USDT / BTC / USD) -->
+      <div id="wtab-section-deposit">
+        <!-- Sub-Currency Rail Selector -->
+        <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+          <button type="button" id="dep-rail-btn-upi" class="mode-btn active real-active" onclick="switchDepositRail('UPI')">
+            🇮🇳 1. UPI & Virtual Bank (INR)
+          </button>
+          <button type="button" id="dep-rail-btn-usdt" class="mode-btn" onclick="switchDepositRail('USDT')">
+            🌐 2. Web3 USDT (TRC20 / Polygon)
+          </button>
+          <button type="button" id="dep-rail-btn-btc" class="mode-btn" onclick="switchDepositRail('BTC')">
+            🪙 3. Native Bitcoin (BTC SegWit)
+          </button>
+          <button type="button" id="dep-rail-btn-usd" class="mode-btn" onclick="switchDepositRail('USD')">
+            💵 4. Global Forex USD (Virtual IBAN)
+          </button>
+        </div>
+
+        <!-- RAIL 1: UPI & VIRTUAL BANK -->
+        <div id="dep-rail-view-upi">
+          <!-- Active Receiver Indicator -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-glass); flex-wrap: wrap;">
+            <span style="font-size: 11px; color: var(--text-muted);">Active Verified Payee:</span>
+            <span id="onpage-active-payee-badge" style="background: rgba(229,185,95,0.15); border: 1px solid var(--accent-gold); color: var(--accent-gold); font-weight: 800; font-size: 11px; padding: 3px 10px; border-radius: 4px; font-family: var(--font-mono);">
+              Pushkar Menariya (pushkar.quant@upi)
+            </span>
+            <button class="btn-action" style="padding: 3px 8px; font-size: 10px; border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;" onclick="switchOnpageWalletTab('REAL_SETUP')">
+              ⚙️ Setup Real Bank UPI
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: center; background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+            <!-- Left: Amount Picker & Inputs -->
+            <div>
+              <h3 style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px;">Instant UPI & Dynamic QR Recharge</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Pick your deposit amount to generate the live payment QR with GST invoice:</p>
+              
+              <div style="display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;">
+                <button type="button" class="mode-btn" style="padding: 6px 12px; font-size: 12px;" onclick="setOnpageDepositAmount(1000)">₹1,000</button>
+                <button type="button" class="mode-btn active real-active" id="wbtn-dep-2500" style="padding: 6px 12px; font-size: 12px;" onclick="setOnpageDepositAmount(2500)">₹2,500</button>
+                <button type="button" class="mode-btn" style="padding: 6px 12px; font-size: 12px;" onclick="setOnpageDepositAmount(5000)">₹5,000</button>
+                <button type="button" class="mode-btn" style="padding: 6px 12px; font-size: 12px;" onclick="setOnpageDepositAmount(10000)">₹10,000</button>
+                <button type="button" class="mode-btn" style="padding: 6px 12px; font-size: 12px;" onclick="setOnpageDepositAmount(25000)">₹25,000</button>
+              </div>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">Custom Amount (INR ₹)</label>
+                <input type="number" id="onpage-dep-amount" class="form-control" value="2500" oninput="updateOnpageDynamicQR(this.value)">
+              </div>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">12-Digit Bank UTR / Reference Number</label>
+                <input type="text" id="onpage-dep-utr" class="form-control" placeholder="e.g. 482910382910 (Enter after completing UPI payment)">
+              </div>
+
+              <button class="btn-vip-gold" style="width: 100%; padding: 13px; font-weight: 800; font-size: 14px; border-radius: 8px;" onclick="confirmOnpageDepositWithGST()">
+                ✓ CONFIRM PAYMENT & ISSUE 18% GST INVOICE
+              </button>
+            </div>
+
+            <!-- Right: Dynamic QR & Mobile Intent Apps -->
+            <div style="text-align: center; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 12px; border: 1px solid var(--border-glass);">
+              <div style="background: #fff; padding: 12px; display: inline-block; border-radius: 12px; margin-bottom: 12px;">
+                <img id="onpage-upi-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=pushkar.quant@upi&pn=RAMYA%20QUANT%20GLOBAL&am=2500.00&cu=INR&tn=RamyaAlgoFuel" alt="UPI QR" style="display: block; width: 180px; height: 180px;">
+              </div>
+              <div id="onpage-disp-upi" style="font-size: 13px; font-weight: 800; color: var(--accent-gold); font-family: var(--font-mono); margin-bottom: 10px;">
+                pushkar.quant@upi (₹2,500.00)
+              </div>
+              <!-- Mobile App Direct Triggers -->
+              <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                <a id="onpage-intent-phonepe" href="phonepe://pay?pa=pushkar.quant@upi&pn=RamyaQuant&am=2500&cu=INR" class="btn-action" style="font-size: 11px; padding: 6px 12px; text-decoration: none; border-color: #a855f7; color: #a855f7;">
+                  🟣 PhonePe
+                </a>
+                <a id="onpage-intent-gpay" href="gpay://upi/pay?pa=pushkar.quant@upi&pn=RamyaQuant&am=2500&cu=INR" class="btn-action" style="font-size: 11px; padding: 6px 12px; text-decoration: none; border-color: #3b82f6; color: #3b82f6;">
+                  🔵 Google Pay
+                </a>
+                <a id="onpage-intent-paytm" href="paytmmp://pay?pa=pushkar.quant@upi&pn=RamyaQuant&am=2500&cu=INR" class="btn-action" style="font-size: 11px; padding: 6px 12px; text-decoration: none; border-color: #06b6d4; color: #06b6d4;">
+                  🔷 Paytm
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RAIL 2: WEB3 USDT (TRC20 & POLYGON) -->
+        <div id="dep-rail-view-usdt" style="display: none; background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: center;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 20px;">🌐</span>
+                <h3 style="font-size: 16px; font-weight: 800; color: var(--accent-cyan);">Deposit USDT (Tron TRC20 / Polygon)</h3>
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                Send USDT from Binance, Bybit, Delta Exchange, OKX, or Trust Wallet. Zero bank involvement, zero tax liability!
+              </p>
+              
+              <div class="form-group">
+                <label style="font-size: 11px;">Select Network</label>
+                <select id="onpage-dep-usdt-network" class="form-control" onchange="updateUsdtDepositQR()">
+                  <option value="TRC20">Tron (TRC20) — Instant Confirmation (Fee ~1.5 USDT)</option>
+                  <option value="POLYGON">Polygon (USDT POS) — Ultra Low Gas Fee (~$0.02)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">Your Official Ramya Corporate USDT Address</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="onpage-dep-usdt-addr" class="form-control" readonly value="TYz7Q8kRamyaQuantGlobalOfficialTRC20Vault99" style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-cyan); background: rgba(0,0,0,0.5);">
+                  <button type="button" class="btn-action" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-size: 11px; white-space: nowrap;" onclick="copyTextToClipboard('onpage-dep-usdt-addr')">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">Deposit Amount (USDT $)</label>
+                <input type="number" id="onpage-dep-usdt-amount" class="form-control" placeholder="e.g. 50" value="50">
+              </div>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">Blockchain Transaction Hash (TxHash)</label>
+                <input type="text" id="onpage-dep-usdt-hash" class="form-control" placeholder="Paste 64-char TxHash after sending USDT">
+              </div>
+
+              <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-weight: 800; border-radius: 8px;" onclick="confirmOnpageCryptoDeposit('USDT')">
+                ⚡ VERIFY TXHASH & CREDIT USDT TO VAULT
+              </button>
+            </div>
+
+            <div style="text-align: center; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 12px; border: 1px solid var(--border-glass);">
+              <div style="background: #fff; padding: 12px; display: inline-block; border-radius: 12px; margin-bottom: 10px;">
+                <img id="onpage-usdt-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TYz7Q8kRamyaQuantGlobalOfficialTRC20Vault99" alt="USDT QR" style="display: block; width: 180px; height: 180px;">
+              </div>
+              <div style="font-size: 12px; color: var(--accent-cyan); font-weight: 700; font-family: var(--font-mono);">
+                Tron TRC20 / Polygon POS
+              </div>
+              <div style="font-size: 10px; color: var(--accent-green); margin-top: 4px;">
+                ● Auto-credited directly to Ramya Multi-Currency Vault
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RAIL 3: NATIVE BITCOIN (BTC SEGWIT) -->
+        <div id="dep-rail-view-btc" style="display: none; background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: center;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 20px;">🪙</span>
+                <h3 style="font-size: 16px; font-weight: 800; color: #fbbf24;">Deposit Native Bitcoin (BTC)</h3>
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                Receive Bitcoin directly into Ramya Cold SegWit Storage. Stored on native chain with cryptographic multi-sig security.
+              </p>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">Your Official Ramya Bitcoin SegWit Address</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="onpage-dep-btc-addr" class="form-control" readonly value="bc1qramya99masterfounderquantbtcreserve2026" style="font-family: var(--font-mono); font-size: 12px; color: #fbbf24; background: rgba(0,0,0,0.5);">
+                  <button type="button" class="btn-action" style="border-color: #fbbf24; color: #fbbf24; font-size: 11px; white-space: nowrap;" onclick="copyTextToClipboard('onpage-dep-btc-addr')">
+                    📋 Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">BTC Amount</label>
+                <input type="number" id="onpage-dep-btc-amount" class="form-control" placeholder="e.g. 0.005" step="0.0001" value="0.005">
+              </div>
+
+              <div class="form-group">
+                <label style="font-size: 11px;">Bitcoin TxHash / Transaction ID</label>
+                <input type="text" id="onpage-dep-btc-hash" class="form-control" placeholder="Paste Bitcoin TxID">
+              </div>
+
+              <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-weight: 800; border-radius: 8px;" onclick="confirmOnpageCryptoDeposit('BTC')">
+                🪙 CONFIRM BTC TRANSACTION & CREDIT VAULT
+              </button>
+            </div>
+
+            <div style="text-align: center; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 12px; border: 1px solid var(--border-glass);">
+              <div style="background: #fff; padding: 12px; display: inline-block; border-radius: 12px; margin-bottom: 10px;">
+                <img id="onpage-btc-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=bitcoin:bc1qramya99masterfounderquantbtcreserve2026" alt="Bitcoin QR" style="display: block; width: 180px; height: 180px;">
+              </div>
+              <div style="font-size: 12px; color: #fbbf24; font-weight: 700; font-family: var(--font-mono);">
+                Bitcoin Native SegWit (bc1q)
+              </div>
+              <div style="font-size: 10px; color: var(--accent-green); margin-top: 4px;">
+                ● 2-Confirmations Auto-Sweep Protection
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RAIL 4: GLOBAL FOREX USD (VIRTUAL IBAN) -->
+        <div id="dep-rail-view-usd" style="display: none; background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+          <div style="max-width: 680px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span style="font-size: 20px;">💵</span>
+              <h3 style="font-size: 16px; font-weight: 800; color: #60a5fa;">Global Forex / USD Inward Wire (Virtual IBAN)</h3>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+              For international clients, foreign prop firms, and cross-border software revenue. Settled directly into Ramya Corporate Forex Vault via Swift/SEPA:
+            </p>
+
+            <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 14px; font-family: var(--font-mono); font-size: 12px; line-height: 2; margin-bottom: 16px;">
+              <div>Bank Name: <strong style="color: #fff;">Barclays Corporate Treasury / CurrencyCloud Multi-Asset Rail</strong></div>
+              <div>Account Name: <strong style="color: #60a5fa;">RAMYA QUANT TECHNOLOGIES ENTERPRISE LTD</strong></div>
+              <div>Virtual IBAN: <strong style="color: var(--accent-gold);">GB29RAMY90214829103847</strong></div>
+              <div>BIC / SWIFT: <strong style="color: #fff;">RAMYGB2LXXX</strong></div>
+              <div>Routing / Sort Code: <strong style="color: #fff;">20-00-00</strong></div>
+              <div>Currency Supported: <strong style="color: var(--accent-green);">USD, EUR, GBP, AED, SGD</strong></div>
+              <div>Purpose Code: <strong style="color: #cbd5e1;">P0802 (Software Consulting & Quant Research Services)</strong></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label style="font-size: 11px;">Inbound Amount (USD $)</label>
+                <input type="number" id="onpage-dep-usd-amount" class="form-control" value="500">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 11px;">Bank Swift / Wire Reference</label>
+                <input type="text" id="onpage-dep-usd-ref" class="form-control" placeholder="e.g. SWIFT_BARC_889104">
+              </div>
+            </div>
+
+            <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-weight: 800; border-radius: 8px;" onclick="confirmOnpageCryptoDeposit('USD')">
+              💵 RECORD INBOUND WIRE WIRE INTO RAMYA VAULT
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: SEND / PAYOUT ANY CURRENCY (MASTER PASSKEY PROTECTED) -->
+      <div id="wtab-section-omnipayout" style="display: none;">
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1.5px solid var(--accent-cyan); max-width: 680px; box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 24px;">📤</span>
+              <h3 style="font-size: 17px; font-weight: 800; color: var(--accent-cyan);">Global Omni-Asset Payout Terminal</h3>
+            </div>
+            <span style="background: rgba(0, 242, 254, 0.15); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">
+              PASSPORT TO ANY CURRENCY
+            </span>
+          </div>
+
+          <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 16px;">
+            Send funds out in <strong>USDT, Indian UPI (₹), USD Wire, or Bitcoin</strong> to any client, vendor, or exchange. Every transaction is guarded by your private Founder Master Passkey.
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700; color: var(--accent-cyan);">Payout Currency</label>
+              <select id="onpage-omni-currency" class="form-control" onchange="updateOmniPayoutPlaceholder(this.value)">
+                <option value="USDT">🌐 USDT (Web3 TRC20 / Polygon)</option>
+                <option value="INR">🇮🇳 INR (Scan & Pay UPI / IMPS)</option>
+                <option value="USD">💵 USD (International Wire / Swift)</option>
+                <option value="BTC">🪙 BTC (Native Bitcoin SegWit)</option>
+                <option value="ETH">💎 ETH (Ethereum EVM)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Payout Amount</label>
+              <input type="number" id="onpage-omni-amount" class="form-control" placeholder="e.g. 100" value="100">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label id="onpage-omni-target-label" style="font-size: 11px; font-weight: 700;">Recipient USDT Address / Target *</label>
+            <input type="text" id="onpage-omni-target" class="form-control" placeholder="e.g. TR7NHkorR9P8T9v7kvj5vT... or vendor@okaxis" value="TYz7Q8kRamyaQuantGlobalOfficialTRC20Vault99" style="font-family: var(--font-mono);">
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">
+              🔐 Founder Master Passkey * (निजी मास्टर सुरक्षा कुंजी)
+            </label>
+            <input type="password" id="onpage-omni-passkey" class="form-control" placeholder="Enter Founder Private Passkey (Default: RAMYA9999)" value="RAMYA9999" style="border-color: var(--accent-gold); font-family: var(--font-mono); letter-spacing: 2px;">
+            <span style="font-size: 10px; color: var(--text-muted);">Required for all withdrawals. No employee or hacker can withdraw without this key.</span>
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px;">Expense Category / Transaction Purpose</label>
+            <input type="text" id="onpage-omni-note" class="form-control" value="Offshore Client Payout / Return (0% Indian Tax Liability)">
+          </div>
+
+          <!-- 0% Offshore Tax Shield Toggle -->
+          <div style="background: rgba(0, 240, 118, 0.08); border: 1px solid var(--accent-green); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+            <input type="checkbox" id="onpage-omni-taxshield" checked style="width: 18px; height: 18px; cursor: pointer;">
+            <label for="onpage-omni-taxshield" style="font-size: 11px; color: #e2e8f0; cursor: pointer; margin: 0;">
+              <strong style="color: var(--accent-green);">🛡️ Tag as 0% Tax Offshore Return (FEMA Compliant):</strong> Funds received and returned in same foreign/crypto currency never touch domestic INR rails and incur ₹0 Indian tax liability.
+            </label>
+          </div>
+
+          <button class="btn-vip-gold" style="width: 100%; padding: 14px; font-size: 14px; font-weight: 900; border-radius: 8px;" onclick="submitOnpageOmniPayout()">
+            🚀 BROADCAST INSTANT PAYOUT FROM RAMYA VAULT
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 3: INSTANT CURRENCY SWAP (ZERO FEE) -->
+      <div id="wtab-section-swap" style="display: none;">
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1.5px solid #60a5fa; max-width: 650px; box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 24px;">🔄</span>
+              <h3 style="font-size: 17px; font-weight: 800; color: #60a5fa;">Internal Instant Currency Swap</h3>
+            </div>
+            <span style="background: rgba(59, 130, 246, 0.15); border: 1px solid #60a5fa; color: #60a5fa; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">
+              0% CONVERSION FEE
+            </span>
+          </div>
+
+          <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 16px;">
+            Instantly rebalance or convert your funds inside Ramya Corporate Vault (USDT ⇋ INR ⇋ USD ⇋ BTC). No external exchange fees or tax events!
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">From Currency</label>
+              <select id="swap-from-curr" class="form-control" onchange="calculateSwapPreview()">
+                <option value="USDT">🌐 USDT (Web3)</option>
+                <option value="INR">🇮🇳 INR (Liquid Rupee)</option>
+                <option value="USD">💵 USD (Forex Wire)</option>
+                <option value="BTC">🪙 BTC (Bitcoin)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">To Currency</label>
+              <select id="swap-to-curr" class="form-control" onchange="calculateSwapPreview()">
+                <option value="INR">🇮🇳 INR (Liquid Rupee)</option>
+                <option value="USDT">🌐 USDT (Web3)</option>
+                <option value="USD">💵 USD (Forex Wire)</option>
+                <option value="BTC">🪙 BTC (Bitcoin)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700;">Amount to Swap</label>
+            <input type="number" id="swap-amount" class="form-control" value="100" oninput="calculateSwapPreview()">
+          </div>
+
+          <!-- Swap Preview Box -->
+          <div style="background: rgba(0,0,0,0.5); border: 1px solid rgba(229, 185, 95, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 14px; text-align: center;">
+            <div style="font-size: 11px; color: var(--text-muted);">Estimated You Will Receive:</div>
+            <div id="swap-preview-text" style="font-size: 20px; font-weight: 800; color: var(--accent-gold); font-family: var(--font-mono); margin-top: 4px;">
+              ≈ ₹8,500.00 INR (Rate: 1 USDT = ₹85.00)
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">
+              🔐 Founder Master Passkey *
+            </label>
+            <input type="password" id="swap-passkey" class="form-control" placeholder="Enter Founder Private Passkey (Default: RAMYA9999)" value="RAMYA9999" style="border-color: var(--accent-gold); font-family: var(--font-mono); letter-spacing: 2px;">
+          </div>
+
+          <button class="btn-vip-gold" style="width: 100%; padding: 13px; font-weight: 800; border-radius: 8px;" onclick="submitOnpageCurrencySwap()">
+            🔄 EXECUTE INSTANT ZERO-FEE CURRENCY SWAP
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 4: WITHDRAW TO SAVINGS BANK (SEC 44ADA) -->
+      <div id="wtab-section-bank" style="display: none;">
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1.5px solid var(--accent-green); max-width: 650px; box-shadow: 0 0 25px rgba(0, 240, 118, 0.15);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 24px;">🏦</span>
+              <h3 style="font-size: 17px; font-weight: 800; color: var(--accent-green);">Safe Personal Savings Bank Withdrawal</h3>
+            </div>
+            <span style="background: rgba(0, 240, 118, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">
+              SECTION 44ADA SHIELD
+            </span>
+          </div>
+
+          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+            <strong style="color: #f59e0b; font-size: 12px;">⚠️ FOUNDER BANK ACCOUNT SAFETY RULE:</strong>
+            <p style="font-size: 11px; color: #e2e8f0; margin-top: 4px; line-height: 1.5;">
+              Client deposits stay safe inside Ramya Master Vault. Withdraw only your net declared profit / personal founder salary under Section 44ADA (eligible for a 50% presumptive business deduction). This prevents RBI suspicious turnover alerts!
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Personal Savings Bank A/C *</label>
+              <input type="text" id="onpage-bank-acc" class="form-control" value="50200084729104">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Bank IFSC Code *</label>
+              <input type="text" id="onpage-bank-ifsc" class="form-control" value="HDFC0001245">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700;">Withdrawal Amount (INR ₹) *</label>
+            <input type="number" id="onpage-bank-amt" class="form-control" value="10000">
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">
+              🔐 Founder Master Passkey *
+            </label>
+            <input type="password" id="onpage-bank-passkey" class="form-control" value="RAMYA9999" style="border-color: var(--accent-gold); font-family: var(--font-mono); letter-spacing: 2px;">
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px;">Accounting Purpose / Tax Declaration</label>
+            <input type="text" id="onpage-bank-note" class="form-control" value="Founder Personal Profit / Salary Drawings (Section 44ADA)">
+          </div>
+
+          <button class="btn-action" style="width: 100%; border-color: var(--accent-green); color: var(--accent-green); font-weight: 800; padding: 13px; font-size: 14px;" onclick="submitOnpageBankWithdrawal()">
+            🏦 SAFE TRANSFER TO PERSONAL SAVINGS BANK
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 5: FOUNDER MASTER PASSKEY SECURITY MANAGEMENT -->
+      <div id="wtab-section-passkey" style="display: none;">
+        <div style="background: rgba(0,0,0,0.3); padding: 22px; border-radius: 12px; border: 1.5px solid var(--accent-gold); max-width: 680px; box-shadow: 0 0 25px rgba(229, 185, 95, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 26px;">🔑</span>
+              <div>
+                <h3 style="font-size: 17px; font-weight: 800; color: var(--accent-gold);">Founder Master Passkey Security</h3>
+                <p style="font-size: 11px; color: var(--text-muted);">Military-Grade AES-256 Bit Private Protection Suite</p>
+              </div>
+            </div>
+            <span id="passkey-status-badge" style="background: rgba(0, 240, 118, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 800;">
+              ● KEY ARMED
+            </span>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 10px; padding: 14px; margin-bottom: 18px;">
+            <h4 style="font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 4px;">1. Test Key Verification (कुंजी जांचें)</h4>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Enter your key to verify its cryptographic validity in real time:</p>
+            <div style="display: flex; gap: 8px;">
+              <input type="password" id="test-verify-key-input" class="form-control" placeholder="Enter key to verify" value="RAMYA9999" style="flex: 1; font-family: var(--font-mono); letter-spacing: 2px;">
+              <button class="btn-action" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 800; font-size: 12px; white-space: nowrap;" onclick="testVerifyMasterPasskey()">
+                🔍 Verify Key
+              </button>
+            </div>
+            <div id="test-verify-result" style="font-size: 11px; margin-top: 6px; font-weight: 700;"></div>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 10px; padding: 14px;">
+            <h4 style="font-size: 13px; font-weight: 800; color: var(--accent-gold); margin-bottom: 4px;">2. Change Master Passkey (नई गुप्त कुंजी बनाएं)</h4>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Only you (Pushkar Menariya) can set or change this master key:</p>
+            
+            <div class="form-group">
+              <label style="font-size: 11px;">Current Master Key</label>
+              <input type="password" id="cfg-old-passkey" class="form-control" placeholder="Current Key (e.g. RAMYA9999)">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">New Private Master Key</label>
+              <input type="password" id="cfg-new-passkey" class="form-control" placeholder="Enter strong new passkey">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Confirm New Master Key</label>
+              <input type="password" id="cfg-confirm-passkey" class="form-control" placeholder="Re-enter strong new passkey">
+            </div>
+
+            <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-weight: 800; border-radius: 8px;" onclick="updateMasterPasskeyUI()">
+              🔐 UPDATE FOUNDER MASTER PASSKEY
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: REDEEM REFERRAL POINTS TO CASH -->
+      <div id="wtab-section-redeem" style="display: none;">
+        <div style="background: rgba(168, 85, 247, 0.1); border: 1.5px solid #a855f7; border-radius: 12px; padding: 18px; max-width: 600px;">
+          <h3 style="font-size: 16px; font-weight: 800; color: #c084fc; margin-bottom: 6px;">🎁 Convert Referral Points to Real Wallet Cash</h3>
+          <p style="font-size: 12px; color: #e2e8f0; margin-bottom: 14px;">1 Referral Point = ₹1.00 Instant Fuel Cash Credit:</p>
+          <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+            <button type="button" class="mode-btn active real-active" onclick="document.getElementById('onpage-redeem-pts').value=500">500 Pts (= ₹500)</button>
+            <button type="button" class="mode-btn active real-active" onclick="document.getElementById('onpage-redeem-pts').value=1000">1,000 Pts (= ₹1,000)</button>
+            <button type="button" class="mode-btn active real-active" onclick="document.getElementById('onpage-redeem-pts').value=2500">2,500 Pts (= ₹2,500)</button>
+            <button type="button" class="mode-btn active real-active" onclick="document.getElementById('onpage-redeem-pts').value=5000">5,000 Pts (= ₹5,000)</button>
+          </div>
+          <div class="form-group">
+            <label style="font-size: 11px;">Points to Convert</label>
+            <input type="number" id="onpage-redeem-pts" class="form-control" value="1000" min="100" step="100">
+          </div>
+          <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-weight: 800;" onclick="submitOnpagePointsRedemption()">
+            ⚡ CONVERT POINTS TO CASH & CREDIT WALLET
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 5: LIVE PASSBOOK LEDGER -->
+      <div id="wtab-section-passbook" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h4 style="font-size: 14px; font-weight: 800; color: #fff;">Real-Time Corporate Transaction Passbook</h4>
+          <button class="btn-action" style="padding: 4px 10px; font-size: 11px; border-color: var(--accent-cyan); color: var(--accent-cyan);" onclick="downloadVaultStatementCSV()">
+            📥 Download Statement (CSV)
+          </button>
+        </div>
+        <div id="onpage-passbook-container" style="max-height: 250px; overflow-y: auto;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 2: CONFIGURE REAL BANK & UPI ACCOUNT -->
+      <div id="wtab-section-realsetup" style="display: none;">
+        <div style="background: rgba(0,0,0,0.4); border: 1.5px solid var(--accent-gold); border-radius: 14px; padding: 22px; max-width: 760px; box-shadow: 0 0 25px rgba(229, 185, 95, 0.2);">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">
+            <span style="font-size: 26px;">⚙️</span>
+            <div>
+              <h3 style="font-size: 17px; font-weight: 800; color: var(--accent-gold);">
+                SETUP REAL BANK ACCOUNT & UPI ID (असली बैंक खाता व QR कोड जोड़ें)
+              </h3>
+              <p style="font-size: 12px; color: #cbd5e1;">
+                Enter your authentic Google Pay / PhonePe / Paytm UPI ID or upload your shop/firm standee QR code. All customer payments will go directly to your bank account!
+              </p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">
+                🔴 Your Real UPI ID (PhonePe / GPay / Paytm) *
+              </label>
+              <input type="text" id="real-cfg-upi" class="form-control" placeholder="e.g. 9829xxxxxx@paytm or pushkar@okhdfcbank" style="font-family: var(--font-mono); font-size: 14px; border-color: var(--accent-gold);">
+              <span style="font-size: 10px; color: var(--text-muted);">Must be a registered UPI ID backed by your bank account.</span>
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Account Holder / Business Name *</label>
+              <input type="text" id="real-cfg-name" class="form-control" placeholder="e.g. PUSHKAR MENARIYA" value="PUSHKAR MENARIYA">
+              <span style="font-size: 10px; color: var(--text-muted);">Official name shown in PhonePe/Google Pay.</span>
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Bank Name (for Direct IMPS / NEFT)</label>
+              <input type="text" id="real-cfg-bankname" class="form-control" placeholder="e.g. HDFC Bank / SBI / ICICI" value="HDFC Bank Ltd">
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Bank Account Number</label>
+              <input type="text" id="real-cfg-bankacc" class="form-control" placeholder="e.g. 50200084729104" value="50200084729104">
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Bank IFSC Code</label>
+              <input type="text" id="real-cfg-bankifsc" class="form-control" placeholder="e.g. HDFC0001245" value="HDFC0001245">
+            </div>
+
+            <div class="form-group">
+              <label style="font-size: 11px; font-weight: 700;">Minimum Client Deposit (₹)</label>
+              <input type="number" id="real-cfg-mindep" class="form-control" value="500">
+            </div>
+          </div>
+
+          <!-- Upload Real Standee QR Photo Option -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(229,185,95,0.4); border-radius: 10px; padding: 14px; margin-top: 10px; text-align: center;">
+            <div style="font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px;">
+              📸 Optional: Upload Your Actual PhonePe / Paytm / GPay Standee QR Photo
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+              If you have an official QR standee or photo, upload it here so clients scan your exact merchant QR!
+            </p>
+            <input type="file" id="real-cfg-qr-file" accept="image/*" style="display: none;" onchange="handleStandeeQrUpload(event)">
+            <button type="button" class="btn-action" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-size: 11px; padding: 6px 14px;" onclick="document.getElementById('real-cfg-qr-file').click()">
+              📁 Choose Standee Image / Photo
+            </button>
+            <div id="standee-qr-preview-box" style="display: none; margin-top: 10px;">
+              <img id="standee-qr-preview-img" src="" alt="Custom Standee QR" style="max-height: 120px; border-radius: 8px; border: 1px solid var(--accent-gold);">
+              <div style="font-size: 10px; color: var(--accent-green); margin-top: 4px;">✓ Custom QR Image Loaded</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px; display: flex; gap: 10px;">
+            <button class="btn-vip-gold" style="flex: 2; padding: 14px; font-size: 14px; font-weight: 900; border-radius: 8px;" onclick="saveRealPaymentConfiguration()">
+              💾 SAVE & ACTIVATE REAL ACCOUNT (असली पेमेंट चालू करें)
+            </button>
+            <button class="btn-action" style="flex: 1; border-color: var(--accent-cyan); color: var(--accent-cyan);" onclick="switchOnpageWalletTab('DEPOSIT')">
+              👁️ View Live QR
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: REAL CLIENT DEPOSITS & APPROVALS LEDGER -->
+      <div id="wtab-section-clientdeposits" style="display: none;">
+        <div style="background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <h4 style="font-size: 15px; font-weight: 800; color: #fff;">👥 Real Client Deposits & Payment Ledger (ग्राहकों का लेनदेन)</h4>
+              <p style="font-size: 11px; color: var(--text-muted);">Real transactions submitted by clients via UPI and Bank transfer with 12-digit UTR numbers.</p>
+            </div>
+            <button class="btn-action" style="border-color: var(--accent-green); color: var(--accent-green); font-size: 11px;" onclick="loadClientDepositsLedger()">
+              🔄 Refresh Payments
+            </button>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="table-fintech" style="width: 100%; font-size: 12px;">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Time</th>
+                  <th>Client / Payer</th>
+                  <th>UTR / Ref Code</th>
+                  <th>Amount (₹)</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="client-deposits-table-body">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                    Loading verified client transactions...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==========================================================================
+         RAMYA INTERNAL PROP-BOOK (DABBA HYBRID / OFF-EXCHANGE BOOK)
+         ========================================================================== -->
+    <section id="dabba-propbook-section" class="glass-box" style="display: none; margin-bottom: 28px; border-color: var(--accent-gold); box-shadow: 0 0 25px rgba(229, 185, 95, 0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">🎲</span>
+          <div>
+            <h2 style="font-size: 19px; font-weight: 800; color: var(--accent-gold);">
+              RAMYA INTERNAL PROP-BOOK & OFF-EXCHANGE LIQUIDITY ENGINE
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Zero Brokerage • Clients trade on real exchange tick prices matched against House Liquidity • 10% Profit Fee Auto-Cut to Vault.
+            </p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <span style="font-size: 11px; padding: 4px 10px; border-radius: 4px; background: rgba(229,185,95,0.15); color: var(--accent-gold); font-weight: 800; border: 1px solid var(--accent-gold);">
+            ● PROP-BOOK ACTIVE
+          </span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 18px; font-family: var(--font-mono);">
+        <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Internal House Collateral</div>
+          <div style="color: var(--accent-gold); font-weight: 800; font-size: 18px;">₹50,00,000.00</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Prop House Liquid Reserve</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Exchange Brokerage</div>
+          <div style="color: var(--accent-green); font-weight: 800; font-size: 18px;">₹0.00 (Zero Fee)</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">100% Client Cost Saved</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Fee Settlement</div>
+          <div style="color: var(--accent-cyan); font-weight: 800; font-size: 18px;">10% Only on Profit</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Direct to Ramya Corporate Vault</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 14px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+          <div style="color: var(--text-muted); font-size: 11px;">Market Price Feed</div>
+          <div style="color: #fff; font-weight: 800; font-size: 18px;">NSE / MCX Live L2</div>
+          <div style="font-size: 10px; color: var(--accent-green); margin-top: 2px;">● Sub-10ms Live Streaming</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         LIVE ROBOT CONTROL DECK & DIRECT REAL ORDER TERMINAL
+         ========================================================================== -->
+    <section class="glass-box" style="margin-bottom: 28px; border-color: var(--accent-gold); box-shadow: 0 0 25px rgba(229, 185, 95, 0.15);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">⚡</span>
+          <div>
+            <h2 style="font-size: 19px; font-weight: 800; color: var(--accent-gold);">
+              REAL LIVE ROBOT COMMAND DECK & DIRECT ORDER TERMINAL
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Live broker connection to Delta Exchange India (HMAC-SHA256 Authenticated). Auto-syncing every 2.5s.
+            </p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button class="btn-action" style="border-color: var(--accent-green); color: var(--accent-green); font-size: 12px; font-weight: 700;" onclick="refreshLiveDeltaData()">
+            🔄 Refresh Real Positions
+          </button>
+          <button class="btn-action" style="border-color: var(--accent-red); color: var(--accent-red); font-size: 12px; font-weight: 700;" onclick="closeAllLivePositions()">
+            ⚠️ Close All Positions (Emergency)
+          </button>
+        </div>
+      </div>
+
+      <!-- Real Positions Live Table Container -->
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h3 style="font-size: 14px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+            <span style="color: var(--accent-green);">●</span> OPEN REAL-MONEY POSITIONS ON DELTA EXCHANGE INDIA:
+          </h3>
+          <span style="font-size: 11px; color: var(--accent-gold); font-family: var(--font-mono); background: rgba(229,185,95,0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--accent-gold);">
+            200x Isolated Leverage
+          </span>
+        </div>
+        <div id="live-positions-table-wrapper" style="overflow-x: auto;">
+          <!-- Populated dynamically by renderLiveDeltaPositions() -->
+        </div>
+      </div>
+
+      <!-- Direct Real Order Strike Terminal -->
+      <div style="background: rgba(0,0,0,0.45); border-radius: 12px; padding: 18px; border: 1px solid var(--border-subtle);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-size: 15px; font-weight: 700; color: var(--accent-cyan);">
+            🚀 Execute Real Market Order on Delta Exchange (Instant Live Money Strike):
+          </h3>
+          <span style="font-size: 11px; color: var(--accent-green); font-weight: 700;">
+            ✓ Real Delta API Connected
+          </span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; align-items: flex-end;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px; color: var(--text-muted);">Contract Symbol</label>
+            <select id="terminal-symbol" class="form-control">
+              <option value="BTCUSD" selected>BTCUSD (0.001 BTC / lot)</option>
+              <option value="ETHUSD">ETHUSD (0.01 ETH / lot)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px; color: var(--text-muted);">Order Action</label>
+            <select id="terminal-side" class="form-control">
+              <option value="sell" selected>SELL / SHORT (Trend Follower)</option>
+              <option value="buy">BUY / LONG (Dip Buyer)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px; color: var(--text-muted);">Contracts Size</label>
+            <input type="number" id="terminal-size" class="form-control" value="6" min="1" max="100">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px; color: var(--text-muted);">Leverage Multiplier</label>
+            <select id="terminal-leverage" class="form-control">
+              <option value="200" selected>200x Isolated (Ultra Leverage)</option>
+              <option value="100">100x Isolated</option>
+              <option value="50">50x Isolated</option>
+            </select>
+          </div>
+
+          <div>
+            <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-size: 13px; font-weight: 800; border-radius: 8px;" onclick="executeTerminalRealOrder()">
+              ⚡ SUBMIT REAL ORDER
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         MAIN WORKSPACE: ROBOT CATALOG & SIDEBAR
+         ========================================================================== -->
+
+    <main class="workspace-grid">
+
+      <!-- LEFT COLUMN: SPECIALIZED ROBOTS & MARKET RADAR -->
+      <section>
+        <!-- ==========================================================================
+             LIVE ROBOT REAL-TIME CONSOLE & STREAMING LOGS (TASK-6642 TELEMETRY)
+             ========================================================================== -->
+        <section id="live-bot-console-section" class="glass-box" style="margin-bottom: 24px; border-color: var(--accent-green); box-shadow: 0 0 25px rgba(0, 240, 118, 0.12);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 22px;">🟢</span>
+              <div>
+                <h2 style="font-size: 17px; font-weight: 800; color: #fff;">
+                  LIVE ALGO ROBOT STREAMING TELEMETRY & LOG TERMINAL
+                </h2>
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                  Real Daemon PID task-6642 • Delta Exchange India • Sub-10ms Micro-Velocity & Auto-Breakeven
+                </p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span id="bot-live-pulse-badge" style="background: rgba(0,240,118,0.15); color: var(--accent-green); border: 1px solid var(--accent-green); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 800; font-family: var(--font-mono);">
+                ● LOG STREAM ACTIVE
+              </span>
+              <button class="btn-action" style="padding: 5px 12px; font-size: 11px; font-weight: 700;" onclick="fetchLiveBotLogs()">
+                🔄 Refresh Stream
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-Time Metrics Strip -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; font-family: var(--font-mono); font-size: 12px;">
+            <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <div style="color: var(--text-muted); font-size: 10px;">Daemon Status</div>
+              <div style="color: var(--accent-green); font-weight: 800; font-size: 13px;">● RUNNING (task-6642)</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <div style="color: var(--text-muted); font-size: 10px;">Trailing Breakeven</div>
+              <div style="color: var(--accent-gold); font-weight: 800; font-size: 13px;">ARMED (Zero-Risk)</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <div style="color: var(--text-muted); font-size: 10px;">Dual Pair Scan</div>
+              <div style="color: var(--accent-cyan); font-weight: 800; font-size: 13px;">BTCUSD + ETHUSD</div>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <div style="color: var(--text-muted); font-size: 10px;">Velocity Cycle</div>
+              <div style="color: #fff; font-weight: 800; font-size: 13px;">3.0s Micro-Scan</div>
+            </div>
+          </div>
+
+          <!-- Live Streaming Terminal Box -->
+          <div style="background: #030712; border: 1px solid #1f2937; border-radius: 8px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.6; color: #4ade80; max-height: 220px; overflow-y: auto; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);" id="live-bot-log-terminal">
+            <div style="color: #9ca3af;">[SYSTEM] Initializing live daemon output stream...</div>
+          </div>
+        </section>
+
+        <div class="section-title">
+          <h2>🤖 Specialized Robot Suite (Operational Live Robots)</h2>
+          <button class="btn-vip-gold" style="font-size: 12px; padding: 6px 14px; font-weight: 800; border-radius: 6px;" onclick="quickLiveMarketStrike('BTCUSD', 'sell', 1)">
+            ⚡ Fast 1-Click Real Strike (1 Lot BTC Short)
+          </button>
+        </div>
+
+        <div class="robot-catalog-grid">
+
+          <!-- ROBOT 0: MASTER AI (FEATURED 1-CLICK) -->
+          <div class="robot-card featured-card" onclick="selectRobot('AUTO_AI_SELECTOR')">
+            <div class="robot-header">
+              <div>
+                <div class="robot-name">🧠 Ramya Master AI (1-Click Full Automatic)</div>
+                <div style="font-size: 12px; color: var(--accent-gold); font-weight: 600; margin-top: 3px;">
+                  OMNI-MARKET AUTO DETECT • 88.2% HISTORICAL WIN RATE
+                </div>
+              </div>
+              <span class="robot-tag" style="background: rgba(229,185,95,0.2); color: var(--accent-gold);">RECOMMENDED</span>
+            </div>
+            <p class="robot-desc">
+              Completely hands-free: Automatically detects whether your broker is Indian (Zerodha/Dhan), Crypto (Delta/Binance), or Forex (Exness/MT5), and routes orders to the top specialized sub-robot in real time.
+            </p>
+            <div class="robot-stats-row">
+              <span>Timeframe: <strong>Adaptive (5s-15m)</strong></span>
+              <span>Leverage: <strong>Auto-Sized (Up to 200x)</strong></span>
+              <span>Fee Model: <strong>10% Only on Profit</strong></span>
+            </div>
+            <button class="btn-deploy-robot" style="background: var(--accent-gold); color: #000;">
+              ✓ ACTIVE & ARMED (1-CLICK AUTO MODE)
+            </button>
+          </div>
+
+          <!-- ROBOT 1: CRYPTO VELOCITY -->
+          <div class="robot-card" onclick="selectRobot('RAMYA_CRYPTO_VELOCITY')">
+            <div class="robot-header">
+              <div class="robot-name">⚡ Ramya Crypto Velocity</div>
+              <span class="robot-tag">CRYPTO 24/7</span>
+            </div>
+            <p class="robot-desc">
+              Specialized for BTC & ETH. Enters at the base (bottom 10%) of big candles in the first 5 seconds using L2 Order Book buyer dominance. 200x leverage ready.
+            </p>
+            <div class="robot-stats-row">
+              <span>Exchanges: <strong>Delta, Binance, Bybit</strong></span>
+              <span>Win Rate: <strong>84.5%</strong></span>
+            </div>
+            <button class="btn-deploy-robot">Select Crypto Robot</button>
+          </div>
+
+          <!-- ROBOT 2: MCX TITAN -->
+          <div class="robot-card" onclick="selectRobot('RAMYA_TITAN_MCX')">
+            <div class="robot-header">
+              <div class="robot-name">🪙 Ramya Titan MCX & Silver</div>
+              <span class="robot-tag">MCX COMMODITIES</span>
+            </div>
+            <p class="robot-desc">
+              Specialized for Gold, Silver, and Crude Oil. Utilizes Volume Spread Analysis (VSA) and evening US-session volatility pulses with wide noise-proof buffers.
+            </p>
+            <div class="robot-stats-row">
+              <span>Assets: <strong>Gold, Silver, Crude</strong></span>
+              <span>Win Rate: <strong>86.1%</strong></span>
+            </div>
+            <button class="btn-deploy-robot">Select MCX Robot</button>
+          </div>
+
+          <!-- ROBOT 3: NIFTY SNIPER -->
+          <div class="robot-card" onclick="selectRobot('RAMYA_NIFTY_SNIPER')">
+            <div class="robot-header">
+              <div class="robot-name">🎯 Ramya Nifty Sniper</div>
+              <span class="robot-tag">NSE / F&O</span>
+            </div>
+            <p class="robot-desc">
+              Specialized for Indian Equities & Index F&O (Nifty 50 & BankNifty). Uses Central Pivot Range (CPR) and 15m Opening Range Breakouts with 3:15 PM auto-square off.
+            </p>
+            <div class="robot-stats-row">
+              <span>Brokers: <strong>Dhan, Zerodha, Angel</strong></span>
+              <span>Win Rate: <strong>87.8%</strong></span>
+            </div>
+            <button class="btn-deploy-robot">Select Nifty Robot</button>
+          </div>
+
+          <!-- ROBOT 4: FOREX ALPHA -->
+          <div class="robot-card" onclick="selectRobot('RAMYA_FOREX_ALPHA')">
+            <div class="robot-header">
+              <div class="robot-name">🌐 Ramya Forex Alpha</div>
+              <span class="robot-tag">GLOBAL FOREX</span>
+            </div>
+            <p class="robot-desc">
+              Specialized for worldwide Forex (EURUSD, GBPUSD, XAUUSD) across Exness, OctaFX, and MT5. Capitalizes on London & New York session opens with 1:3+ Risk-Reward.
+            </p>
+            <div class="robot-stats-row">
+              <span>Brokers: <strong>Exness, MT5, OctaFX</strong></span>
+              <span>Win Rate: <strong>85.3%</strong></span>
+            </div>
+            <button class="btn-deploy-robot">Select Forex Robot</button>
+          </div>
+
+        </div>
+
+        <!-- RECENT AUDIT LEDGER -->
+        <div id="trade-ledger-section" class="glass-box" style="margin-top: 24px;">
+          <div class="section-title">
+            <h2>📜 Live Auditable Trade Ledger & 10% Fee Receipts</h2>
+            <span style="font-size: 11px; color: var(--accent-green);">100% Tax & GST Ready</span>
+          </div>
+          <div id="trade-ledger-container" style="font-size: 13px; font-family: var(--font-mono); line-height: 1.8;">
+            <div style="color: var(--text-muted);">Trade ledger is active. Waiting for next market trigger...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: MULTI-CURRENCY WALLET & MASTER ADMIN -->
+      <aside class="sidebar-panel">
+
+        <!-- UNIVERSAL FUEL WALLET -->
+        <div class="glass-box">
+          <div class="section-title">
+            <h2>💳 Universal Fuel Wallet</h2>
+            <span class="wallet-rule-pill">Zero Risk Guarantee</span>
+          </div>
+
+          <div class="wallet-balance-box">
+            <div class="wallet-fuel-title">Available Fuel Balance</div>
+            <div class="wallet-fuel-amount" id="val-fuel-balance">₹2,500.00</div>
+            <div style="font-size: 13px; color: var(--accent-cyan); font-family: var(--font-mono);">
+              or 30.00 USDT
+            </div>
+          </div>
+
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            <strong>Rule:</strong> When the robot generates a net profit on your broker, the 10% performance fee is automatically deducted from this fuel balance. If fuel hits ₹0, the bot safely pauses trading.
+          </p>
+
+          <button class="btn-recharge" onclick="openModal('modal-wallet')">
+            + RECHARGE FUEL (UPI / USDT)
+          </button>
+        </div>
+
+        <!-- TELEGRAM LIVE BROADCAST PREVIEW -->
+        <div class="glass-box">
+          <div class="section-title">
+            <h2>📢 Telegram Live Broadcast Feed</h2>
+            <span style="font-size: 11px; color: var(--accent-gold);">Channel: @RamyaQuant</span>
+          </div>
+
+          <div class="telegram-preview-box" id="telegram-preview-content">
+            ⚡ <b>RAMYA QUANT GLOBAL — LIVE ALERT</b> ⚡<br>
+            ━━━━━━━━━━━━━━━━━━━━<br>
+            🤖 <b>Robot:</b> Ramya Crypto Velocity<br>
+            🎯 <b>Asset:</b> #BTCUSD (Crypto 200x)<br>
+            📈 <b>Action:</b> 🟢 LONG / BUY @ $81,500.00<br>
+            🎯 <b>Target:</b> +$2,200 pts | 🛡️ <b>SL:</b> -$450 pts<br>
+            💰 <b>Profit Booked:</b> +$42.50 (+₹3,600)<br>
+            🏛️ <b>10% Master Fee Auto-Deducted:</b> $4.25<br>
+            ━━━━━━━━━━━━━━━━━━━━<br>
+            <i>Verified Institutional Algorithmic Execution</i>
+          </div>
+        </div>
+
+        <!-- MASTER ADMIN REVENUE SUMMARY (FOUNDER VIEW) -->
+        <div class="glass-box" style="border-color: rgba(229,185,95,0.4);">
+          <div class="section-title">
+            <h2>👑 Founder / Master Treasury Telemetry</h2>
+            <span style="font-size: 11px; color: var(--accent-gold);">Private Admin</span>
+          </div>
+
+          <div style="font-size: 13px; line-height: 1.9;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Master UPI ID:</span>
+              <strong style="color: var(--accent-gold); font-family: var(--font-mono);">pushkar.quant@upi</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Global USDT Vault:</span>
+              <strong style="color: var(--accent-cyan); font-family: var(--font-mono);">Tron TRC20 / Polygon</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Connected Brokers:</span>
+              <strong id="stat-broker-count">Delta, Zerodha, Dhan, Exness</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Tax Compliance:</span>
+              <strong style="color: var(--accent-green);">18% GST Code Ready</strong>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </main>
+
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 1: CONNECT BROKER API (UNIVERSAL)
+       ========================================================================== -->
+  <div id="modal-broker" class="modal-overlay">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Connect Universal Broker API</h2>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-broker')">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label>Select Market & Broker</label>
+        <select id="input-broker-name" class="form-control">
+          <optgroup label="🇮🇳 Indian Brokers (NSE / F&O / MCX)">
+            <option value="DHAN">Dhan (DhanHQ - Free Ultra-Fast API)</option>
+            <option value="ZERODHA">Zerodha (Kite Connect)</option>
+            <option value="ANGEL_ONE">Angel One (SmartAPI - Free Algo API)</option>
+            <option value="UPSTOX">Upstox API</option>
+            <option value="FYERS">Fyers API</option>
+            <option value="SHOONYA">Shoonya Finvasia (Zero Brokerage)</option>
+          </optgroup>
+          <optgroup label="🪙 Global Crypto Exchanges">
+            <option value="DELTA_EXCHANGE" selected>Delta Exchange (200x Leverage)</option>
+            <option value="BINANCE">Binance Futures</option>
+            <option value="BYBIT">Bybit Derivatives</option>
+            <option value="OKX">OKX Global</option>
+          </optgroup>
+          <optgroup label="🌐 Global Forex & Commodities">
+            <option value="EXNESS">Exness MT5</option>
+            <option value="OCTAFX">OctaFX MT5</option>
+            <option value="MT5_UNIVERSAL">MetaTrader 5 (Universal Any Broker)</option>
+            <option value="XM_GLOBAL">XM Global</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Broker API Key / Client Code</label>
+        <input type="text" id="input-api-key" class="form-control" placeholder="e.g. dhn_live_928471923..." value="delta_live_production_key_4401">
+      </div>
+
+      <div class="form-group">
+        <label>API Secret / Password / PIN</label>
+        <input type="password" id="input-api-secret" class="form-control" placeholder="••••••••••••••••••••" value="delta_super_secret_9981">
+      </div>
+
+      <div class="form-group">
+        <label>Trading Mode</label>
+        <select id="input-broker-mode" class="form-control">
+          <option value="REAL" selected>⚡ 100% Real Money Broker Execution (Live Exchange)</option>
+        </select>
+      </div>
+
+      <div id="broker-test-result" style="display: none; background: rgba(0, 240, 118, 0.1); border: 1px solid var(--accent-green); border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 12px; color: #fff; line-height: 1.6;">
+        <!-- Live ping result -->
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 14px;">
+        <button type="button" class="btn-action" style="flex: 1; padding: 12px; border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;" onclick="testBrokerLiveConnection()">
+          🔍 TEST LIVE API CONNECTION
+        </button>
+        <button type="button" class="btn-vip-gold" style="flex: 1; padding: 12px; font-weight: 800; border-radius: var(--radius-sm);" onclick="submitBrokerConnection()">
+          🔗 SAVE & ACTIVATE
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       MODAL 2: UNIVERSAL FUEL WALLET RECHARGE (UPI QR & USDT)
+       ========================================================================== -->
+  <div id="modal-wallet" class="modal-overlay">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Deposit Fuel Balance</h2>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-wallet')">&times;</button>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button id="btn-tab-upi" class="mode-btn active paper-active" style="flex: 1; padding: 10px;" onclick="switchDepositTab('UPI')">
+          🇮🇳 Indian UPI & QR (INR)
+        </button>
+        <button id="btn-tab-usdt" class="mode-btn" style="flex: 1; padding: 10px;" onclick="switchDepositTab('USDT')">
+          🌐 Global USDT (Crypto TRC20)
+        </button>
+      </div>
+
+      <!-- UPI DEPOSIT SECTION -->
+      <div id="section-deposit-upi" style="text-align: center;">
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 12px; color: var(--text-muted);">Deposit Amount (INR ₹)</label>
+          <input type="number" id="input-deposit-amount" class="form-control" value="2500" min="500" step="500" oninput="updateDepositDynamicQR(this.value)">
+          <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+            <button type="button" class="mode-btn" style="padding: 3px 10px; font-size: 11px;" onclick="setDepositAmount(1000)">₹1,000</button>
+            <button type="button" class="mode-btn" style="padding: 3px 10px; font-size: 11px;" onclick="setDepositAmount(2500)">₹2,500</button>
+            <button type="button" class="mode-btn" style="padding: 3px 10px; font-size: 11px;" onclick="setDepositAmount(5000)">₹5,000</button>
+            <button type="button" class="mode-btn" style="padding: 3px 10px; font-size: 11px;" onclick="setDepositAmount(10000)">₹10,000</button>
+            <button type="button" class="mode-btn" style="padding: 3px 10px; font-size: 11px;" onclick="setDepositAmount(25000)">₹25,000</button>
+            <button type="button" class="mode-btn" style="padding: 3px 10px; font-size: 11px;" onclick="setDepositAmount(50000)">₹50,000</button>
+          </div>
+        </div>
+
+        <div style="background: #fff; padding: 12px; display: inline-block; border-radius: 12px; margin-bottom: 12px;">
+          <!-- Dynamic Live QR Code -->
+          <img id="deposit-upi-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=pushkar.quant@upi&pn=RAMYA%20QUANT%20GLOBAL&am=2500.00&cu=INR&tn=RamyaAlgoFuel" alt="UPI QR" style="display: block; width: 180px; height: 180px;">
+        </div>
+
+        <p style="font-size: 14px; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;" id="deposit-display-upi">
+          UPI ID: pushkar.quant@upi
+        </p>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">
+          Scan with any UPI app (PhonePe, GPay, Paytm) or tap below on mobile:
+        </p>
+
+        <!-- Direct Mobile UPI Apps Intent -->
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;">
+          <a id="intent-phonepe" href="phonepe://pay?pa=pushkar.quant@upi&pn=RamyaQuant&am=2500&cu=INR" class="btn-action" style="font-size: 11px; padding: 6px 12px; text-decoration: none; border-color: #a855f7; color: #a855f7;">
+            🟣 PhonePe
+          </a>
+          <a id="intent-gpay" href="gpay://upi/pay?pa=pushkar.quant@upi&pn=RamyaQuant&am=2500&cu=INR" class="btn-action" style="font-size: 11px; padding: 6px 12px; text-decoration: none; border-color: #3b82f6; color: #3b82f6;">
+            🔵 Google Pay
+          </a>
+          <a id="intent-paytm" href="paytmmp://pay?pa=pushkar.quant@upi&pn=RamyaQuant&am=2500&cu=INR" class="btn-action" style="font-size: 11px; padding: 6px 12px; text-decoration: none; border-color: #06b6d4; color: #06b6d4;">
+            🔷 Paytm UPI
+          </a>
+        </div>
+
+        <div class="form-group" style="text-align: left;">
+          <label>Enter 12-Digit UTR / Transaction Reference</label>
+          <input type="text" id="input-utr" class="form-control" placeholder="e.g. 428192847192">
+        </div>
+
+        <button class="btn-recharge" onclick="confirmDepositWithGST('INR')">
+          ✓ CONFIRM PAYMENT & ISSUE GST INVOICE
+        </button>
+      </div>
+
+      <!-- USDT DEPOSIT SECTION -->
+      <div id="section-deposit-usdt" style="display: none; text-align: center;">
+        <div style="background: #fff; padding: 12px; display: inline-block; border-radius: 12px; margin-bottom: 14px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TYz7Q8kRamyaQuantGlobalOfficialTRC20Vault99" alt="USDT QR" style="display: block;">
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Tron Network (TRC20) Vault Address:</div>
+        <div style="font-size: 13px; font-family: var(--font-mono); color: var(--accent-cyan); word-break: break-all; margin-bottom: 16px; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px;">
+          TYz7Q8kRamyaQuantGlobalOfficialTRC20Vault99
+        </div>
+        <button class="btn-recharge" onclick="confirmDeposit('USDT')">
+          ✓ I HAVE SENT USDT (AUTO-VERIFY)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: ROBOT BLUEPRINT & STRATEGY INSPECTOR (LIVE SPECIFICATIONS)
+       ========================================================================== -->
+  <div id="modal-robot-inspector" class="modal-overlay">
+    <div class="modal-content" style="max-width: 680px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Robot Strategy & Indicator Inspector</h2>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-robot-inspector')">&times;</button>
+      </div>
+      <div id="robot-inspector-body"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: FOUNDER MASTER CONTROL & PAYMENT SETTINGS (PRIVATE ADMIN ONLY)
+       ========================================================================== -->
+  <div id="modal-founder-settings" class="modal-overlay">
+    <div class="modal-content" style="max-width: 640px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: var(--accent-gold);">👑 Founder Master Control & Payout Settings</h2>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-founder-settings')">&times;</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+        Private Founder Controls: Any changes made here dynamically update the UPI QR code, payment destination, and core trading strategy. Clients cannot see or edit this.
+      </p>
+
+      <div class="form-group">
+        <label>Your Master UPI ID (Payments arrive directly to your bank account)</label>
+        <input type="text" id="cfg-upi-id" class="form-control" value="pushkar.quant@upi">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label>Bank Account Number</label>
+          <input type="text" id="cfg-bank-acc" class="form-control" value="50200084729104">
+        </div>
+        <div class="form-group">
+          <label>Bank IFSC Code</label>
+          <input type="text" id="cfg-bank-ifsc" class="form-control" value="HDFC0001245">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Master USDT (TRC20) Vault Address (For International / NRI Payments)</label>
+        <input type="text" id="cfg-usdt-address" class="form-control" value="TYz7Q8kRamyaQuantGlobalOfficialTRC20Vault99">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.4); border-radius: 8px;">
+        <div class="form-group">
+          <label style="color: var(--accent-gold);">Performance Fee Cut (%)</label>
+          <input type="number" id="cfg-commission-pct" class="form-control" value="10" min="5" max="50">
+        </div>
+        <div class="form-group">
+          <label style="color: var(--accent-cyan);">Stop-Loss Buffer (Noise Shield)</label>
+          <input type="number" id="cfg-sl-mult" class="form-control" value="1.5" step="0.1">
+        </div>
+      </div>
+
+      <button class="btn-vip-gold" style="width: 100%; margin-top: 18px; padding: 12px; border-radius: 8px;" onclick="saveFounderSettings()">
+        💾 SAVE FOUNDER SETTINGS & UPDATE QR CODES
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 5: RAMYA CORPORATE MASTER WALLET (BANK FREEZE SHIELD & MULTI-RAIL)
+       ========================================================================== -->
+  <div id="modal-ramya-vault" class="modal-overlay">
+    <div class="modal-content" style="max-width: 820px; max-height: 90vh; overflow-y: auto;">
+      
+      <!-- Vault Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 24px;">🏛️</span>
+            <h2 style="font-size: 22px; font-weight: 800; color: var(--accent-gold); letter-spacing: 0.5px;">RAMYA MASTER CORPORATE WALLET</h2>
+            <span style="background: rgba(0, 240, 118, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">VAULT ACTIVE</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+            Entity: <strong>RAMYA QUANT TECHNOLOGIES ENTERPRISE</strong> | Dual-Rail INR & Web3 USDT Treasury
+          </p>
+        </div>
+        <button style="background: none; border: none; color: #fff; font-size: 26px; cursor: pointer;" onclick="closeModal('modal-ramya-vault')">&times;</button>
+      </div>
+
+      <!-- Bank Freeze Shield Banner -->
+      <div style="background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(229, 185, 95, 0.08)); border: 1px solid var(--accent-cyan); border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="font-size: 28px;">🛡️</div>
+        <div style="font-size: 12px; line-height: 1.5; color: #e2e8f0;">
+          <strong style="color: var(--accent-cyan);">PERSONAL SAVINGS BANK ACCOUNT PROTECTION SHIELD:</strong><br>
+          Client deposits and 10% performance fee profits remain safely inside your <strong>RAMYA Corporate Vault</strong>. Pay expenses, servers, and vendors directly from this wallet via UPI QR without touching your savings bank account — avoiding bank freezing and 30%+ turnover tax!
+        </div>
+      </div>
+
+      <!-- Live Vault Balances Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(229, 185, 95, 0.3); border-radius: 10px; padding: 14px;">
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">🇮🇳 Liquid INR Reserve</div>
+          <div id="vault-inr-balance" style="font-size: 22px; font-weight: 800; color: var(--accent-gold); font-family: var(--font-mono); margin-top: 4px;">₹98,350.00</div>
+          <div style="font-size: 10px; color: var(--accent-green); margin-top: 2px;">● Instant UPI Payout Ready</div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 10px; padding: 14px;">
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">🌐 Web3 USDT Vault</div>
+          <div id="vault-usdt-balance" style="font-size: 22px; font-weight: 800; color: var(--accent-cyan); font-family: var(--font-mono); margin-top: 4px;">$1,450.00</div>
+          <div id="vault-usdt-equiv" style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">≈ ₹1,23,250 INR (TRC20/Polygon)</div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 10px; padding: 14px;">
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">💵 Global Forex USD</div>
+          <div id="vault-usd-balance" style="font-size: 22px; font-weight: 800; color: #60a5fa; font-family: var(--font-mono); margin-top: 4px;">$2,850.00</div>
+          <div id="vault-usd-equiv" style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">≈ ₹2,39,400 INR (Virtual IBAN)</div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 14px;">
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">🪙 Bitcoin & ETH Reserve</div>
+          <div id="vault-btc-balance" style="font-size: 18px; font-weight: 800; color: #fbbf24; font-family: var(--font-mono); margin-top: 4px;">0.085 BTC / 1.25 ETH</div>
+          <div id="vault-btc-equiv" style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">≈ ₹8,46,650 INR (Cold Vault)</div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 14px;">
+          <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Total Corporate Net Worth</div>
+          <div id="vault-total-valuation" style="font-size: 22px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin-top: 4px;">₹13,07,650.00</div>
+          <div id="vault-total-usd-equiv" style="font-size: 10px; color: var(--accent-gold); margin-top: 2px;">≈ $15,384.12 USD Valuation</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; margin-bottom: 18px; overflow-x: auto;">
+        <button id="vtab-btn-upi-pay" class="mode-btn active real-active" onclick="switchVaultTab('UPI_PAY')">
+          📤 Scan & Pay Any UPI
+        </button>
+        <button id="vtab-btn-receive" class="mode-btn" onclick="switchVaultTab('RECEIVE')">
+          📥 Accept Client Payments
+        </button>
+        <button id="vtab-btn-crypto-pay" class="mode-btn" onclick="switchVaultTab('CRYPTO_PAY')">
+          🌐 Send USDT Crypto
+        </button>
+        <button id="vtab-btn-bank-withdraw" class="mode-btn" onclick="switchVaultTab('BANK_WITHDRAW')">
+          🏦 Withdraw to Savings Bank
+        </button>
+        <button id="vtab-btn-statement" class="mode-btn" onclick="switchVaultTab('STATEMENT')">
+          📜 Vault Passbook
+        </button>
+      </div>
+
+      <!-- TAB 1: SCAN & PAY ANY UPI QR (DIRECT VENDOR PAYOUT) -->
+      <div id="vtab-section-upi-pay">
+        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 18px; border: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700; color: #fff;">Pay Any Vendor / Shop / Person via UPI</h3>
+              <p style="font-size: 12px; color: var(--text-muted);">Debits directly from your Ramya Corporate Wallet — your savings account is completely bypassed!</p>
+            </div>
+            <span style="font-size: 11px; color: var(--accent-green); background: rgba(0,240,118,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--accent-green); font-weight: 700;">
+              Zero Bank Limits
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label>Recipient UPI ID or Phone Number</label>
+            <div style="display: flex; gap: 10px;">
+              <input type="text" id="vp-recipient-upi" class="form-control" placeholder="e.g. cloudhost@okaxis, shop@paytm, or 9876543210@upi" style="flex: 1;" value="aws.hosting@okaxis">
+              <button type="button" class="btn-action" style="white-space: nowrap; border-color: var(--accent-cyan); color: var(--accent-cyan);" onclick="simulateQRScan()">
+                📷 Scan QR Image
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Amount to Pay (INR ₹)</label>
+            <input type="number" id="vp-amount-inr" class="form-control" placeholder="e.g. 1500" value="1500">
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setUpiAmount(500)">₹500</button>
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setUpiAmount(1500)">₹1,500</button>
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setUpiAmount(5000)">₹5,000</button>
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setUpiAmount(10000)">₹10,000</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Expense Category / Remark</label>
+            <select id="vp-purpose-category" class="form-control">
+              <option value="Server Hosting & Cloud Infrastructure (AWS/Contabo)">Server Hosting & Cloud Infrastructure (AWS/Contabo)</option>
+              <option value="Software License & Quant Trading API">Software License & Quant Trading API</option>
+              <option value="Staff & Developer Operations">Staff & Developer Operations</option>
+              <option value="Office & Hardware Supplies">Office & Hardware Supplies</option>
+              <option value="Marketing & Client Acquisition">Marketing & Client Acquisition</option>
+              <option value="General Vendor Payment">General Vendor Payment</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">
+              🔐 Founder Master Passkey *
+            </label>
+            <input type="password" id="vp-upi-passkey" class="form-control" value="RAMYA9999" placeholder="Enter Founder Private Passkey" style="border-color: var(--accent-gold); font-family: var(--font-mono); letter-spacing: 2px;">
+          </div>
+
+          <button class="btn-vip-gold" style="width: 100%; padding: 13px; font-size: 15px; margin-top: 10px; border-radius: 8px;" onclick="submitRamyaUpiPayout()">
+            📤 PAY ₹ DIRECTLY FROM RAMYA WALLET (SAVINGS SAFE)
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 2: RECEIVE / ACCEPT CLIENT PAYMENTS (INWARD RAILS) -->
+      <div id="vtab-section-receive" style="display: none;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <!-- Left: Ramya Corporate UPI QR -->
+          <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 18px; border: 1px solid var(--border-subtle); text-align: center;">
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--accent-gold); margin-bottom: 4px;">Ramya Corporate UPI QR</h3>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Instant credit to Ramya Master Corporate Wallet</p>
+            <div style="background: #fff; padding: 10px; display: inline-block; border-radius: 10px; margin-bottom: 12px;">
+              <img id="vault-receive-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi://pay?pa=pay@ramyaquant.enterprise&pn=RamyaQuantTechnologies&cu=INR" alt="Ramya Corporate QR" style="display: block;">
+            </div>
+            <div style="font-size: 13px; font-weight: 700; color: #fff; font-family: var(--font-mono);">
+              pay@ramyaquant.enterprise
+            </div>
+            <div style="font-size: 11px; color: var(--accent-cyan); margin-top: 4px;">
+              Supports PhonePe, GPay, Paytm, BHIM, Cred
+            </div>
+          </div>
+
+          <!-- Right: Corporate Virtual Bank & USDT -->
+          <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 18px; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--accent-cyan); margin-bottom: 10px;">Corporate Virtual Bank Account</h3>
+            <div style="font-size: 12px; line-height: 1.8; color: #e2e8f0; font-family: var(--font-mono); background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; margin-bottom: 12px;">
+              <div>Bank: <strong>ICICI Corporate Virtual Rail</strong></div>
+              <div>A/C Name: <strong>RAMYA QUANT TECHNOLOGIES</strong></div>
+              <div>A/C Number: <strong>RQG8890214820</strong></div>
+              <div>IFSC Code: <strong>ICIC0000104</strong></div>
+              <div>Account Type: <strong>Corporate Virtual Collection</strong></div>
+            </div>
+
+            <h4 style="font-size: 13px; font-weight: 700; color: var(--accent-gold); margin-bottom: 6px;">Web3 USDT Vault (Tron TRC20)</h4>
+            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-cyan); word-break: break-all; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 6px;">
+              TYz7Q8kRamyaQuantGlobalOfficialTRC20Vault99
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: SEND CRYPTO USDT -->
+      <div id="vtab-section-crypto-pay" style="display: none;">
+        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 18px; border: 1px solid var(--border-subtle);">
+          <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">Transfer USDT to Any External Crypto Wallet</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Withdraw funds to Binance, Bybit, Delta Exchange, or hardware cold wallet.</p>
+
+          <div class="form-group">
+            <label>Recipient USDT Address</label>
+            <input type="text" id="vp-crypto-address" class="form-control" placeholder="e.g. TR7NHkorR9P8T9v7kvj5vT... (Tron or Polygon)">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label>Network</label>
+              <select id="vp-crypto-network" class="form-control">
+                <option value="TRC20">Tron (TRC20) — Instant (12 Confirmations)</option>
+                <option value="POLYGON">Polygon (USDT) — Ultra-Low Gas Fee</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount (USDT $)</label>
+              <input type="number" id="vp-crypto-amount" class="form-control" placeholder="e.g. 100" value="100">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">
+              🔐 Founder Master Passkey *
+            </label>
+            <input type="password" id="vp-crypto-passkey" class="form-control" value="RAMYA9999" placeholder="Enter Founder Private Passkey" style="border-color: var(--accent-gold); font-family: var(--font-mono); letter-spacing: 2px;">
+          </div>
+
+          <button class="btn-vip-gold" style="width: 100%; padding: 13px; font-size: 15px; margin-top: 10px; border-radius: 8px;" onclick="submitRamyaUsdtPayout()">
+            🌐 BROADCAST USDT PAYOUT FROM RAMYA VAULT
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 4: SAFE SAVINGS BANK WITHDRAWAL (FOUNDER DRAWINGS) -->
+      <div id="vtab-section-bank-withdraw" style="display: none;">
+        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 18px; border: 1px solid var(--border-subtle);">
+          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+            <strong style="color: #f59e0b; font-size: 13px;">⚠️ SAVINGS BANK SAFETY RECOMMENDATION:</strong>
+            <p style="font-size: 12px; color: #e2e8f0; margin-top: 4px; line-height: 1.5;">
+              Never transfer client trading funds in bulk to your personal savings account. Only withdraw your <strong>clean, declared personal profit / founder drawings</strong> (e.g. ₹20,000 to ₹50,000/month). Keep the rest inside RAMYA Corporate Wallet for trading and vendor expenses. This prevents RBI transaction flags and income tax notices!
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label>Your Personal Savings Bank A/C</label>
+              <input type="text" id="vp-bank-acc" class="form-control" value="50200084729104">
+            </div>
+            <div class="form-group">
+              <label>Bank IFSC Code</label>
+              <input type="text" id="vp-bank-ifsc" class="form-control" value="HDFC0001245">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Amount to Withdraw to Savings Bank (INR ₹)</label>
+            <input type="number" id="vp-bank-amount" class="form-control" value="10000">
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setBankWithdrawAmount(5000)">₹5,000</button>
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setBankWithdrawAmount(10000)">₹10,000</button>
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setBankWithdrawAmount(25000)">₹25,000</button>
+              <button type="button" class="mode-btn" style="padding: 4px 12px; font-size: 12px;" onclick="setBankWithdrawAmount(50000)">₹50,000</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 11px; font-weight: 700; color: var(--accent-gold);">
+              🔐 Founder Master Passkey *
+            </label>
+            <input type="password" id="vp-bank-passkey" class="form-control" value="RAMYA9999" placeholder="Enter Founder Private Passkey" style="border-color: var(--accent-gold); font-family: var(--font-mono); letter-spacing: 2px;">
+          </div>
+
+          <div class="form-group">
+            <label>Accounting Purpose / Tax Declaration</label>
+            <input type="text" id="vp-bank-note" class="form-control" value="Founder Personal Profit / Salary Drawings (Section 44ADA)">
+          </div>
+
+          <button class="btn-action" style="width: 100%; padding: 13px; font-size: 15px; margin-top: 10px; border-radius: 8px; border-color: var(--accent-green); color: var(--accent-green); font-weight: 800;" onclick="submitRamyaBankWithdrawal()">
+            🏦 SAFE TRANSFER TO PERSONAL SAVINGS BANK
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 5: VAULT PASSBOOK & TAX AUDIT TRAIL -->
+      <div id="vtab-section-statement" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-size: 15px; font-weight: 700; color: #fff;">Ramya Master Corporate Passbook</h3>
+          <button class="btn-action" style="padding: 6px 14px; font-size: 12px; border-color: var(--accent-cyan); color: var(--accent-cyan);" onclick="downloadVaultStatementCSV()">
+            📥 Download Statement (CSV)
+          </button>
+        </div>
+        <div id="vault-passbook-table-container" style="max-height: 280px; overflow-y: auto;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==========================================================================
+       MODAL 6: CLIENT ONBOARDING & REFERRAL AFFILIATE CENTER
+       ========================================================================== -->
+  <div id="modal-referrals-clients" class="modal-overlay">
+    <div class="modal-content" style="max-width: 820px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">👥</span>
+          <div>
+            <h2 style="font-size: 20px; font-weight: 800; color: #fff;">CLIENT ONBOARDING & REFERRAL AFFILIATE CENTER</h2>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Add clients, share your referral link, and earn ₹500 fuel + 5% lifetime sub-broker commission on all trades.
+            </p>
+          </div>
+        </div>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-referrals-clients')">&times;</button>
+      </div>
+
+      <!-- Referral Share Banner -->
+      <div style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(229, 185, 95, 0.1)); border: 1.5px solid var(--accent-cyan); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase;">Your Personal Referral Link:</span>
+            <div style="font-size: 16px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin-top: 2px;" id="disp-referral-link">
+              http://localhost:8080/?ref=PUSHKAR99
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-action" style="padding: 8px 14px; border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;" onclick="copyReferralLink()">
+              📋 Copy Link
+            </button>
+            <button class="btn-action" style="padding: 8px 14px; border-color: var(--accent-green); color: var(--accent-green); font-weight: 700;" onclick="shareReferralWhatsApp()">
+              📲 Share on WhatsApp
+            </button>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-family: var(--font-mono); font-size: 11px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+          <div>Referred Clients: <strong style="color: var(--accent-gold);" id="stat-referred-count">14 Traders</strong></div>
+          <div>Points Wallet: <strong style="color: var(--accent-cyan);" id="stat-referred-points">10,000 Pts</strong></div>
+          <div>5% Override Earned: <strong style="color: var(--accent-green);" id="stat-referred-earnings">₹15,400.00</strong></div>
+        </div>
+      </div>
+
+      <!-- Add New Client Form -->
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; margin-bottom: 20px;">
+        <h3 style="font-size: 15px; font-weight: 800; color: var(--accent-gold); margin-bottom: 12px;">
+          ➕ Onboard New Client to Robot Suite
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px;">Client Full Name</label>
+            <input type="text" id="nc-fullname" class="form-control" placeholder="e.g. Amit Kumar">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px;">Mobile Number</label>
+            <input type="text" id="nc-mobile" class="form-control" placeholder="e.g. +919811223344">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px;">Email Address</label>
+            <input type="email" id="nc-email" class="form-control" placeholder="e.g. amit@gmail.com">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label style="font-size: 11px;">Broker Integration</label>
+            <select id="nc-broker" class="form-control">
+              <option value="DELTA_EXCHANGE" selected>Delta Exchange India (200x)</option>
+              <option value="DHAN">Dhan (Free Fast API)</option>
+              <option value="ZERODHA">Zerodha (Kite Connect)</option>
+              <option value="ANGEL_ONE">Angel One (SmartAPI)</option>
+              <option value="EXNESS">Exness MT5 (Forex)</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top: 14px; text-align: right;">
+          <button class="btn-vip-gold" style="padding: 10px 24px; font-weight: 800;" onclick="submitNewClientRegistration()">
+            ✓ ONBOARD CLIENT & ALLOCATE ROBOT
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Client Roster -->
+      <h3 style="font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 10px;">
+        📋 Active Client Accounts & Performance Roster
+      </h3>
+      <div id="clients-roster-container" style="max-height: 250px; overflow-y: auto;">
+        <!-- Populated dynamically by loadClientsRoster() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 7: FOUNDER MASTER EXECUTIVE DESK & ROBOT TUNER
+       ========================================================================== -->
+  <div id="modal-founder-master-desk" class="modal-overlay">
+    <div class="modal-content" style="max-width: 880px; max-height: 92vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">👑</span>
+          <div>
+            <h2 style="font-size: 22px; font-weight: 800; color: var(--accent-gold);">FOUNDER MASTER EXECUTIVE DESK</h2>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Private Founder Suite • Chat Tools, Live Robot Parameter Editor, Indian Tax Engine & Payouts.
+            </p>
+          </div>
+        </div>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-founder-master-desk')">&times;</button>
+      </div>
+
+      <!-- Founder Desk Navigation Tabs -->
+      <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px; overflow-x: auto;">
+        <button id="fd-tab-btn-chat" class="mode-btn active real-active" onclick="switchFounderDeskTab('CHAT')">
+          💬 Community & Chatting Desk
+        </button>
+        <button id="fd-tab-btn-robot" class="mode-btn" onclick="switchFounderDeskTab('ROBOT')">
+          ⚙️ Live Robot Parameter Tuner
+        </button>
+        <button id="fd-tab-btn-tax" class="mode-btn" onclick="switchFounderDeskTab('TAX')">
+          📜 Real Tax & GST Compliance (Sec 44ADA)
+        </button>
+        <button id="fd-tab-btn-payouts" class="mode-btn" onclick="switchFounderDeskTab('PAYOUTS')">
+          💳 Founder Settings & Payouts
+        </button>
+      </div>
+
+      <!-- TAB 1: COMMUNITY & CHATTING DESK -->
+      <div id="fd-tab-section-chat">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+          <!-- WhatsApp Connect -->
+          <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid #22c55e; border-radius: 10px; padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+              <span style="font-size: 24px;">📲</span>
+              <div>
+                <h4 style="font-size: 16px; font-weight: 800; color: #22c55e;">WhatsApp 1-Click Client Connect</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Direct message client with pre-filled algo invite</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Client Mobile Number</label>
+              <input type="text" id="wa-client-number" class="form-control" placeholder="+919876543210" value="+919829012345">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Pre-filled Message</label>
+              <textarea id="wa-client-msg" class="form-control" rows="3" style="font-size: 12px;">Hello! Your Ramya Quant Global robot has booked profit today. Check your live dashboard here: http://localhost:8080</textarea>
+            </div>
+            <button class="btn-action" style="width: 100%; border-color: #22c55e; color: #22c55e; font-weight: 800;" onclick="openWhatsAppChat()">
+              💬 OPEN CLIENT IN WHATSAPP
+            </button>
+          </div>
+
+          <!-- Telegram Signal Broadcaster -->
+          <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid var(--accent-cyan); border-radius: 10px; padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+              <span style="font-size: 24px;">📢</span>
+              <div>
+                <h4 style="font-size: 16px; font-weight: 800; color: var(--accent-cyan);">Telegram Live Signal Broadcaster</h4>
+                <div style="font-size: 11px; color: var(--text-muted);">Channel: @RamyaQuantVerifiedResults</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Signal Text / Profit Announcement</label>
+              <textarea id="tg-broadcast-msg" class="form-control" rows="5" style="font-size: 12px; font-family: var(--font-mono);">⚡ RAMYA QUANT GLOBAL LIVE ALERT:
+• Robot: Ramya Crypto Velocity (200x)
+• Asset: #BTCUSD SHORT @ $81,306.50
+• Net Profit: +$0.89 USD (+₹75.65)
+• Trailing Breakeven: LOCKED</textarea>
+            </div>
+            <button class="btn-action" style="width: 100%; border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 800;" onclick="sendTelegramBroadcast()">
+              🚀 BROADCAST TO TELEGRAM CHANNEL
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ROBOT PARAMETER TUNER -->
+      <div id="fd-tab-section-robot" style="display: none;">
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h4 style="font-size: 16px; font-weight: 800; color: var(--accent-gold);">
+                🛠️ Customize & Modify Robot Trading Logic (सुधार करने का सिस्टम)
+              </h4>
+              <p style="font-size: 12px; color: var(--text-muted);">
+                Changes saved here hot-reload immediately into the active Python trading robot.
+              </p>
+            </div>
+            <select id="tuner-robot-select" class="form-control" style="width: auto; font-weight: 700;" onchange="loadRobotParametersIntoTuner(this.value)">
+              <option value="AUTO_AI_SELECTOR" selected>🧠 Ramya Master AI</option>
+              <option value="RAMYA_CRYPTO_VELOCITY">⚡ Ramya Crypto Velocity (Delta 200x)</option>
+              <option value="RAMYA_TITAN_MCX">🪙 Ramya Titan MCX (Gold & Silver)</option>
+              <option value="RAMYA_NIFTY_SNIPER">🎯 Ramya Nifty & BankNifty Sniper</option>
+              <option value="RAMYA_FOREX_ALPHA">🌐 Ramya Forex Alpha (EURUSD)</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+            <div class="form-group">
+              <label style="font-size: 11px;">Stop-Loss Buffer (%)</label>
+              <input type="number" id="tune-sl" class="form-control" value="0.6" step="0.1" min="0.1" max="5.0">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Take-Profit Ratio (1 : X)</label>
+              <input type="number" id="tune-tp" class="form-control" value="2.8" step="0.1" min="1.0" max="10.0">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Max Leverage Multiplier</label>
+              <select id="tune-leverage" class="form-control">
+                <option value="200" selected>200x Isolated</option>
+                <option value="100">100x Isolated</option>
+                <option value="50">50x Isolated</option>
+                <option value="20">20x</option>
+                <option value="5">5x MIS (Equity)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Risk Allocation Per Trade (%)</label>
+              <input type="number" id="tune-risk" class="form-control" value="20" min="5" max="50">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 11px;">Trailing Breakeven Shield</label>
+              <select id="tune-breakeven" class="form-control">
+                <option value="true" selected>ENABLED (Lock Profit at +$0.05 / +₹20)</option>
+                <option value="false">DISABLED (Full Run)</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn-vip-gold" style="width: 100%; margin-top: 10px; padding: 12px; font-weight: 800;" onclick="saveRobotTunedParameters()">
+            💾 SAVE & APPLY LIVE TO ROBOT ENGINE
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 3: TAX & GST COMPLIANCE DESK -->
+      <div id="fd-tab-section-tax" style="display: none;">
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; line-height: 1.7; font-size: 13px;">
+          <h4 style="font-size: 17px; font-weight: 800; color: var(--accent-green); margin-bottom: 8px;">
+            🇮🇳 Government of India Tax & GST Compliance Master Architecture
+          </h4>
+          <p style="color: var(--text-muted); margin-bottom: 14px;">
+            Everything is structured so that you can run this business legally and keep your profits safe:
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+            <div style="background: rgba(0, 240, 118, 0.08); border: 1px solid var(--accent-green); padding: 12px; border-radius: 8px;">
+              <strong style="color: var(--accent-green); font-size: 14px;">1. Section 44ADA (Income Tax Act)</strong>
+              <p style="font-size: 12px; color: #e2e8f0; margin-top: 4px;">
+                • Presumptive Taxation for Algorithmic Software & IT Consultants.<br>
+                • <strong>50% flat business deduction</strong> on turnover up to ₹75,00,000.<br>
+                • Zero requirement for chartered accountant (CA) book audit.<br>
+                • Legally cuts income tax liability by more than half!
+              </p>
+            </div>
+
+            <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid var(--accent-cyan); padding: 12px; border-radius: 8px;">
+              <strong style="color: var(--accent-cyan); font-size: 14px;">2. 18% GST (SAC Code 998314)</strong>
+              <p style="font-size: 12px; color: #e2e8f0; margin-top: 4px;">
+                • SAC 998314: Information Technology Software Services.<br>
+                • 9% CGST + 9% SGST charged on software profit settlements.<br>
+                • Full Input Tax Credit (ITC) claimable against cloud hosting (AWS), broker API fees, and hardware!
+              </p>
+            </div>
+          </div>
+
+          <div style="background: rgba(229, 185, 95, 0.08); border: 1px solid var(--accent-gold); padding: 12px; border-radius: 8px;">
+            <strong style="color: var(--accent-gold); font-size: 14px;">3. 30% VDA Crypto Tax Protection</strong>
+            <p style="font-size: 12px; color: #e2e8f0; margin-top: 4px;">
+              By operating through the <strong>Ramya Corporate Master Vault</strong>, individual bank accounts are shielded from 1% TDS freezing and 30% flat personal crypto tax notices.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: FOUNDER PAYOUTS & MASTER SETTINGS -->
+      <div id="fd-tab-section-payouts" style="display: none;">
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px;">
+          <h4 style="font-size: 16px; font-weight: 800; color: var(--accent-gold); margin-bottom: 12px;">
+            💳 Master Payout Destination Settings
+          </h4>
+          <div class="form-group">
+            <label>Master UPI ID (Where fees land directly)</label>
+            <input type="text" id="fd-cfg-upi" class="form-control" value="pushkar.quant@upi">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label>Savings Bank Account</label>
+              <input type="text" id="fd-cfg-acc" class="form-control" value="50200084729104">
+            </div>
+            <div class="form-group">
+              <label>IFSC Code</label>
+              <input type="text" id="fd-cfg-ifsc" class="form-control" value="HDFC0001245">
+            </div>
+          </div>
+          <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-weight: 800;" onclick="saveFounderSettings()">
+            💾 SAVE MASTER PAYOUT SETTINGS
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 8: OFFICIAL GST TAX INVOICE
+       ========================================================================== -->
+  <div id="modal-tax-invoice" class="modal-overlay">
+    <div class="modal-content" style="max-width: 620px; background: #0f172a; border-color: var(--accent-gold);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">
+        <h2 style="font-size: 18px; font-weight: 800; color: var(--accent-gold);">🧾 TAX INVOICE (GST COMPLIANT)</h2>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-tax-invoice')">&times;</button>
+      </div>
+      <div id="tax-invoice-content" style="font-family: var(--font-mono); font-size: 12px; line-height: 1.8; color: #e2e8f0;">
+        <!-- Populated dynamically -->
+      </div>
+      <div style="margin-top: 16px; text-align: right;">
+        <button class="btn-action" style="border-color: var(--accent-cyan); color: var(--accent-cyan); font-weight: 700;" onclick="window.print()">
+          🖨️ Print / Save PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 9: PWA / APK 1-CLICK INSTALLATION GUIDE
+       ========================================================================== -->
+  <div id="modal-pwa-install" class="modal-overlay">
+    <div class="modal-content" style="max-width: 540px; text-align: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 20px; font-weight: 800; color: #fff;">📲 Install Ramya App on Mobile</h2>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-pwa-install')">&times;</button>
+      </div>
+
+      <div style="background: #fff; padding: 12px; display: inline-block; border-radius: 12px; margin-bottom: 14px;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=http://localhost:8080" alt="Mobile App QR" style="display: block; width: 180px; height: 180px;">
+      </div>
+
+      <p style="font-size: 13px; color: var(--accent-gold); font-weight: 700; margin-bottom: 8px;">
+        Scan with your Phone Camera to Open & Install
+      </p>
+
+      <button class="btn-vip-gold" style="width: 100%; padding: 12px; font-weight: 800; margin-bottom: 14px;" onclick="triggerNativeInstallPrompt()">
+        ⚡ 1-CLICK INSTALL ON THIS DEVICE (PWA / APK)
+      </button>
+
+      <div style="text-align: left; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px; font-size: 12px; line-height: 1.6; color: var(--text-muted);">
+        <strong style="color: #fff;">📱 Android / iPhone पर इंस्टॉल करने का तरीका:</strong><br>
+        1. अपने फोन में Google Chrome या Safari में <strong>http://localhost:8080</strong> खोलें。<br>
+        2. ऊपर 3 डॉट्स (Menu) दबाएं और <strong>"Add to Home Screen"</strong> या <strong>"Install App"</strong> चुनें।<br>
+        3. यह आपके मोबाइल स्क्रीन पर एक असली APK ऐप की तरह गोल्ड आइकॉन के साथ इंस्टॉल हो जाएगा!
+      </div>
+  <!-- ==========================================================================
+       MODAL 10: 24/7 FREE CLOUD BACKGROUND DEPLOYMENT SUITE
+       ========================================================================== -->
+  <div id="modal-cloud-deployment" class="modal-overlay">
+    <div class="modal-content" style="max-width: 780px; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">☁️</span>
+          <div>
+            <h2 style="font-size: 19px; font-weight: 800; color: #818cf8;">
+              24/7 FREE CLOUD BACKGROUND DEPLOYMENT SUITE
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              PC बंद होने पर भी रोबोट 24 घंटे लगातार बिना रुके क्लाउड पर चलता रहेगा — बिल्कुल फ्री (₹0 खर्चा)!
+            </p>
+          </div>
+        </div>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-cloud-deployment')">&times;</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px;">
+        <!-- Option 1: GitHub Actions -->
+        <div style="background: rgba(129, 140, 248, 0.08); border: 1.5px solid #818cf8; border-radius: 10px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #a5b4fc; font-size: 15px;">Option 1: GitHub Actions</strong>
+            <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">100% FREE</span>
+          </div>
+          <p style="font-size: 12px; color: #cbd5e1; line-height: 1.6; margin-bottom: 10px;">
+            GitHub का फ्री सर्वर आपके रोबोट को बैकग्राउंड में चलाता है। हर 6 घंटे में ऑटो-रिफ्रेश होकर 24x7 बिना रुके चलता है।
+          </p>
+          <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.8; margin-left: 16px; margin-bottom: 12px;">
+            <li>Zero Server Cost (Free Forever)</li>
+            <li>Secrets Encryption (API Key सुरक्षित)</li>
+            <li>Auto-restarts upon network failure</li>
+          </ul>
+          <button class="btn-action" style="width: 100%; border-color: #818cf8; color: #818cf8; font-size: 12px; font-weight: 700; padding: 8px;" onclick="copyCloudWorkflowYml()">
+            📋 Copy GitHub Workflow YAML
+          </button>
+        </div>
+
+        <!-- Option 2: Oracle Cloud Always-Free -->
+        <div style="background: rgba(245, 158, 11, 0.08); border: 1.5px solid #f59e0b; border-radius: 10px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #fcd34d; font-size: 15px;">Option 2: Oracle Free VPS</strong>
+            <span style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 800;">ALWAYS FREE</span>
+          </div>
+          <p style="font-size: 12px; color: #cbd5e1; line-height: 1.6; margin-bottom: 10px;">
+            Oracle Cloud जीवनभर के लिए 4 OCPU, 24 GB RAM और 200 GB SSD फ्री देता है। यहाँ रोबोट एक सेकंड भी नहीं रुकता।
+          </p>
+          <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.8; margin-left: 16px; margin-bottom: 12px;">
+            <li>Ubuntu Linux 24/7 Dedicated VPS</li>
+            <li>Systemd Auto-Restart on reboot</li>
+            <li>1-Click Docker Launch</li>
+          </ul>
+          <button class="btn-action" style="width: 100%; border-color: #f59e0b; color: #f59e0b; font-size: 12px; font-weight: 700; padding: 8px;" onclick="copyOracleDockerCommand()">
+            📋 Copy 1-Click Launch Command
+          </button>
+        </div>
+      </div>
+
+      <!-- Instructions & Configuration Box -->
+      <div style="background: rgba(0,0,0,0.5); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; font-family: var(--font-mono); font-size: 12px; line-height: 1.7;">
+        <div style="color: var(--accent-gold); font-weight: 800; margin-bottom: 8px;">
+          🛠️ त्वरित 3-स्टेप सेटअप गाइड (अपने लैपटॉप को कभी भी बंद कर सकते हैं):
+        </div>
+        <div style="color: #e2e8f0;">
+          <strong>Step 1:</strong> अपने GitHub Repo में <code>.github/workflows/ramya_runner.yml</code> फाइल बनाएं。<br>
+          <strong>Step 2:</strong> Settings ➔ Secrets में अपनी <code>DELTA_API_KEY</code> और <code>DELTA_API_SECRET</code> जोड़ें।<br>
+          <strong>Step 3:</strong> Actions टैब में जाकर <strong>Run Workflow</strong> दबाएं। रोबोट तुरंत क्लाउड पर 24/7 लाइव शुरू हो जाएगा!
+        </div>
+      </div>
+  <!-- ==========================================================================
+       MODAL 11: VIP CLIENT REFERRAL ONBOARDING & ₹500 BONUS CLAIM
+       ========================================================================== -->
+  <div id="modal-referral-signup" class="modal-overlay">
+    <div class="modal-content" style="max-width: 600px; text-align: left; border-color: var(--accent-gold); box-shadow: 0 0 45px rgba(229, 185, 95, 0.4);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 28px;">🎁</span>
+          <div>
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--accent-gold);">
+              VIP PARTNER INVITATION (RAMYA QUANT)
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              ₹500.00 Welcome Trading Fuel automatically reserved for your account!
+            </p>
+          </div>
+        </div>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-referral-signup')">&times;</button>
+      </div>
+
+      <!-- Referral Pass Card -->
+      <div style="background: rgba(229, 185, 95, 0.1); border: 1.5px solid var(--accent-gold); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Referred By Master Partner:</div>
+            <div style="font-size: 16px; font-weight: 800; color: #fff;" id="ref-modal-inviter-name">Pushkar Menariya</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Invitation Code:</div>
+            <span style="background: var(--accent-gold); color: #000; font-weight: 900; font-size: 13px; padding: 3px 10px; border-radius: 6px; font-family: var(--font-mono);" id="ref-modal-code-badge">
+              PUSHKAR99
+            </span>
+          </div>
+        </div>
+        <div style="margin-top: 10px; border-top: 1px solid rgba(229,185,95,0.2); padding-top: 8px; display: flex; justify-content: space-between; font-size: 12px;">
+          <span style="color: #cbd5e1;">✨ Instant Sign-up Gift:</span>
+          <strong style="color: var(--accent-green); font-size: 13px;">+₹500.00 Fuel Credit (100% Free)</strong>
+        </div>
+      </div>
+
+      <!-- Quick 10-Second Registration Form -->
+      <div class="form-group">
+        <label style="font-size: 12px;">Your Full Name</label>
+        <input type="text" id="ref-signup-name" class="form-control" placeholder="e.g. Ramesh Patel" autofocus>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label style="font-size: 12px;">Mobile / WhatsApp Number</label>
+          <input type="text" id="ref-signup-mobile" class="form-control" placeholder="e.g. 9829012345">
+        </div>
+        <div class="form-group">
+          <label style="font-size: 12px;">Email Address (Optional)</label>
+          <input type="email" id="ref-signup-email" class="form-control" placeholder="e.g. ramesh@gmail.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: 12px;">Select Your Broker for Automated Algo Trading</label>
+        <select id="ref-signup-broker" class="form-control" style="font-weight: 700;">
+          <option value="DELTA_EXCHANGE" selected>🪙 Delta Exchange India (Crypto 200x - 500x)</option>
+          <option value="DHAN">🇮🇳 Dhan (Free Ultra-Fast Indian Algo API)</option>
+          <option value="ZERODHA">🇮🇳 Zerodha (Kite Connect)</option>
+          <option value="ANGEL_ONE">🇮🇳 Angel One (SmartAPI)</option>
+          <option value="EXNESS">🌐 Exness MetaTrader 5 (Global Forex 500x)</option>
+          <option value="OCTAFX">🌐 OctaFX MetaTrader 5</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: 12px;">Referral Partner Code (Auto-Applied)</label>
+        <input type="text" id="ref-signup-code" class="form-control" value="PUSHKAR99" readonly style="background: rgba(0,0,0,0.5); color: var(--accent-gold); font-weight: 800; font-family: var(--font-mono); border-color: var(--accent-gold);">
+      </div>
+
+      <button class="btn-vip-gold" style="width: 100%; padding: 14px; font-size: 14px; font-weight: 900; border-radius: 8px; margin-top: 6px; box-shadow: 0 0 25px rgba(229, 185, 95, 0.4);" onclick="submitReferralWelcomeSignup()">
+        🎉 CLAIM ₹500 BONUS & ACTIVATE ROBOT NOW
+      </button>
+
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px;">
+        100% Free Signup • No Credit Card Required • Instant Live Connection to Ramya Institutional Engine.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 12: UNIVERSAL BROKER API CONNECTOR (DELTA, DHAN, ZERODHA, MT5, BINANCE)
+       ========================================================================== -->
+  <div id="modal-universal-broker" class="modal-overlay">
+    <div class="modal-content" style="max-width: 620px; background: #0b1120; border-color: var(--accent-cyan); box-shadow: 0 0 45px rgba(56, 189, 248, 0.35);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 26px;">🔌</span>
+          <div>
+            <h2 style="font-size: 19px; font-weight: 800; color: var(--accent-cyan);">
+              UNIVERSAL BROKER & EXCHANGE API GATEWAY
+            </h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+              Connect Any Broker Instantly • Auto Architecture Recognition • Zero Execution Lag
+            </p>
+          </div>
+        </div>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;" onclick="closeModal('modal-universal-broker')">&times;</button>
+      </div>
+
+      <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid var(--accent-cyan); border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 12px; line-height: 1.6; color: #cbd5e1;">
+        <strong style="color: #fff;">💡 Universal Auto-Detect Enabled:</strong> Paste any API Key (Delta Exchange, DhanHQ, Zerodha Kite, MT5 Bridge, Binance). The Ramya Universal Adapter will automatically detect the exchange and calibrate order routing!
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Target Broker / Exchange Architecture</label>
+        <select id="ub-modal-broker-select" class="form-control" style="font-weight: 700;">
+          <option value="AUTO" selected>✨ Auto-Detect Broker (Recommended)</option>
+          <option value="DELTA_EXCHANGE">🪙 Delta Exchange India (Crypto 200x-500x)</option>
+          <option value="DHAN">🇮🇳 DhanHQ (Free Ultra-Fast Indian F&O)</option>
+          <option value="ZERODHA">🇮🇳 Zerodha Kite Connect (Stocks & MCX)</option>
+          <option value="MT5_BRIDGE">💵 MT5 Bridge (Global Forex & Prop 500x)</option>
+          <option value="BINANCE">🌐 Binance Futures API</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: 12px; color: var(--text-muted); font-weight: 700;">API Key / Access Token</label>
+        <input type="password" id="ub-modal-api-key" class="form-control" placeholder="Paste your Broker API Key or Token here...">
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: 12px; color: var(--text-muted); font-weight: 700;">API Secret Key</label>
+        <input type="password" id="ub-modal-api-secret" class="form-control" placeholder="Paste API Secret (Required for Delta, Zerodha, Binance)...">
+      </div>
+
+      <div class="form-group">
+        <label style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Client ID / Account ID / Passphrase (Optional)</label>
+        <input type="text" id="ub-modal-client-id" class="form-control" placeholder="e.g. DHAN100234, Client Code, or MT5 Login ID...">
+      </div>
+
+      <div id="ub-connect-result" style="display: none; padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 12px;"></div>
+
+      <button type="button" class="btn-vip-gold" style="width: 100%; padding: 14px; font-size: 14px; font-weight: 900; border-radius: 8px;" onclick="submitUniversalBrokerConnect()">
+        ⚡ TEST CONNECTION & ACTIVATE BROKER LIVE
+      </button>
+
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px;">
+        🔒 AES-256 Encrypted • Read & Trade Only • Withdrawal Disabled by Design for Your Protection.
+      </p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

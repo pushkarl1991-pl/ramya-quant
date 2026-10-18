@@ -1,0 +1,28 @@
+{
+  "strategy": "TrendFollowingMomentumStrategy",
+  "symbol": "XAUTUSD",
+  "initial_capital": 19.6,
+  "ending_capital": 19.5521,
+  "total_trades": 1,
+  "win_rate_pct": 0.0,
+  "total_gross_pnl_usd": -0.0439,
+  "total_fees_paid_usd": 0.004,
+  "total_net_pnl_usd": -0.0479,
+  "profit_factor": 0.0,
+  "max_drawdown_pct": 0.24,
+  "trades": [
+    {
+      "time": "2026-10-14 17:20:00+00:00",
+      "side": "SELL",
+      "size": 4,
+      "entry": 4085.37,
+      "exit": 4096.35,
+      "gross_pnl": -0.0439,
+      "fees": 0.004,
+      "net_pnl": -0.0479,
+      "reason": "STOP_LOSS_HIT",
+      "bars_held": 16,
+      "equity": 19.5521
+    }
+  ]
+}
