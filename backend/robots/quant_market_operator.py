@@ -178,21 +178,22 @@ def run_quant_scanner_loop():
                             if is_big_candle:
                                 append_log(f"⚡ [RAPID MOMENTUM DETECTED] {sym}: Squeeze Breakout + Whale Flow! Scaling to MAXIMUM Lot Size!")
 
-                            # Dynamic Multi-Lot scaling based on institutional confluence
+                            # Fee-Optimized Safe Lot Sizing for ~$15-50 Wallet
+                            # Keeps commissions tiny ($0.05-$0.10) so profits stay in your pocket!
                             if sym == "ETHUSD":
-                                if is_big_candle or confluence >= 88.0:
-                                    scaled_size = 50  # 50 contracts (~$5.9 margin at 200x)
+                                if is_big_candle or confluence >= 90.0:
+                                    scaled_size = 10  # 10 contracts (~$240 notional, ~$1.60 margin)
                                 elif confluence >= 80.0:
-                                    scaled_size = 25  # 25 contracts (~$2.9 margin at 200x)
+                                    scaled_size = 6   # 6 contracts (~$145 notional, ~$1.00 margin)
                                 else:
-                                    scaled_size = 15  # 15 contracts (~$1.8 margin at 200x)
+                                    scaled_size = 4   # 4 contracts (~$97 notional, ~$0.65 margin)
                             else: # BTCUSD
-                                if is_big_candle or confluence >= 88.0:
-                                    scaled_size = 10  # 10 contracts (~$4.0 margin at 200x)
+                                if is_big_candle or confluence >= 90.0:
+                                    scaled_size = 3   # 3 contracts (~$248 notional, ~$1.65 margin)
                                 elif confluence >= 80.0:
-                                    scaled_size = 5   # 5 contracts (~$2.0 margin at 200x)
+                                    scaled_size = 2   # 2 contracts (~$165 notional, ~$1.10 margin)
                                 else:
-                                    scaled_size = 3   # 3 contracts (~$1.2 margin at 200x)
+                                    scaled_size = 2   # 2 contracts (~$165 notional, ~$1.10 margin)
 
                             order_req = DeltaOrderRequest(
                                 symbol=sym,
@@ -203,13 +204,13 @@ def run_quant_scanner_loop():
                             res = d_client.place_order(order_req)
                             if res and res.success and not res.is_paper:
                                 last_live_trade_ts[sym] = time.time()
-                                append_log(f"🚀 [REAL DELTA AUTO-STRIKE FILLED] {sym} {order_side.upper()} {scaled_size} Contracts (ID: {res.order_id}) at ${mark_price:,.2f} | Rapid Target TP: +0.09% | SL: -0.08% Armed!")
+                                append_log(f"🚀 [REAL DELTA AUTO-STRIKE FILLED] {sym} {order_side.upper()} {scaled_size} Contracts (ID: {res.order_id}) at ${mark_price:,.2f} | 2-Tier Runner System Armed!")
                             elif res and not res.success:
                                 append_log(f"⚠️ [DELTA ORDER REJECTED] {sym}: {res.error_message}")
                         except Exception as e:
                             append_log(f"⚠️ [AUTO-TRADE EXCEPTION] {e}")
 
-                # Monitor open positions on EVERY 2 ticks: Rapid Cash Close (+0.09%) & Micro SL (-0.08%)
+                # 2-TIER PROFIT LOCKER & TRAILING RUNNER MONITOR (Checked on every 2 ticks)
                 if tick_count % 2 == 0:
                     try:
                         from quant_robot.delta_client import DeltaClient, DeltaOrderRequest
@@ -234,29 +235,46 @@ def run_quant_scanner_loop():
 
                                 pnl_usd = (pnl_pct / 100.0) * p_entry * (p_size * (0.001 if sym == "BTCUSD" else 0.01))
 
-                                # 1. 0-Loss Armor Snap at +0.035% (~$29 on BTC)
-                                if pnl_pct >= 0.035 and pnl_pct < 0.08:
+                                # Step 1: 0-Loss Armor Snap at +0.035% (~$29 on BTC)
+                                if pnl_pct >= 0.035 and pnl_pct < 0.10:
                                     append_log(f"🛡️ [0-LOSS ARMOR LOCKED] {sym} {'LONG' if is_long else 'SHORT'} {p_size}cts | PnL: +{pnl_pct:.2f}% (+${pnl_usd:.2f}) | Breakeven Snap Armed @ ${p_entry:,.2f}")
 
-                                # 2. Rapid Cash Close Trigger (+0.08% ~ +16-20% ROE on 200x - 95% Precision)
-                                if pnl_pct >= 0.08:
+                                # Step 2: Tier-1 Rapid Cash Close (Close 50% at +0.10% ~ +20% ROE)
+                                if pnl_pct >= 0.10 and p_size > 1:
+                                    close_qty = p_size // 2
                                     try:
                                         close_req = DeltaOrderRequest(
+                                            symbol=sym,
+                                            side=close_side,
+                                            size=close_qty,
+                                            order_type="market_order",
+                                            reduce_only=True
+                                        )
+                                        c_res = d_client.place_order(close_req)
+                                        if c_res and c_res.success:
+                                            append_log(f"💰 [TIER-1 CASH LOCKED] {sym} Closed {close_qty}cts at +{pnl_pct:.2f}%! Cash banked. Remaining {p_size - close_qty}cts Running for Big Profits!")
+                                    except Exception as c_err:
+                                        append_log(f"⚠️ [TIER-1 ERROR] {c_err}")
+
+                                # Step 3: Tier-2 Runner Big Target Close (+0.25% or Single Contract Close at +0.12%)
+                                elif (pnl_pct >= 0.25) or (p_size == 1 and pnl_pct >= 0.12):
+                                    try:
+                                        runner_req = DeltaOrderRequest(
                                             symbol=sym,
                                             side=close_side,
                                             size=p_size,
                                             order_type="market_order",
                                             reduce_only=True
                                         )
-                                        c_res = d_client.place_order(close_req)
-                                        if c_res and c_res.success:
+                                        r_res = d_client.place_order(runner_req)
+                                        if r_res and r_res.success:
                                             last_live_trade_ts[sym] = 0.0
-                                            append_log(f"💰 [95% PRECISION CASH PROFIT LOCKED] {sym} {'LONG' if is_long else 'SHORT'} +{pnl_pct:.2f}% (+${pnl_usd:.2f} USD Cash!). Margin Restored! Ready for next trade!")
-                                    except Exception as close_err:
-                                        append_log(f"⚠️ [AUTO-CLOSE TARGET ERROR] {close_err}")
+                                            append_log(f"🚀 [TIER-2 BIG RUNNER HIT] {sym} Closed {p_size}cts at +{pnl_pct:.2f}% (+${pnl_usd:.2f} USD Big Cash!). Full Margin Restored!")
+                                    except Exception as r_err:
+                                        append_log(f"⚠️ [RUNNER CLOSE ERROR] {r_err}")
 
-                                # 3. Strict Micro Stop Loss (-0.07% Max Risk Cut)
-                                elif pnl_pct <= -0.07:
+                                # Step 4: Strict Micro Stop-Loss Cut (-0.065% Max Risk Preserved)
+                                elif pnl_pct <= -0.065:
                                     try:
                                         sl_req = DeltaOrderRequest(
                                             symbol=sym,
@@ -268,7 +286,7 @@ def run_quant_scanner_loop():
                                         sl_res = d_client.place_order(sl_req)
                                         if sl_res and sl_res.success:
                                             last_live_trade_ts[sym] = 0.0
-                                            append_log(f"🛑 [MICRO-SL EMERGENCY CUT] {sym} {'LONG' if is_long else 'SHORT'} {pnl_pct:.2f}% (-${abs(pnl_usd):.2f}). Loss Cut Instantly! Capital 99% Preserved!")
+                                            append_log(f"🛑 [MICRO-SL EMERGENCY CUT] {sym} {'LONG' if is_long else 'SHORT'} {pnl_pct:.2f}% (-${abs(pnl_usd):.2f}). Small Cut! Capital 99.3% Preserved!")
                                     except Exception as sl_err:
                                         append_log(f"⚠️ [AUTO-SL ERROR] {sl_err}")
                     except Exception:

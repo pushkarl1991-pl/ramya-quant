@@ -31,6 +31,12 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import pandas as pd
 import requests
 
+try:
+    import urllib3.util.connection as urllib3_cn
+    urllib3_cn.HAS_IPV6 = False
+except Exception:
+    pass
+
 from .config import (
     DEFAULT_SLIPPAGE_RATE,
     DEFAULT_TAKER_FEE_RATE,
