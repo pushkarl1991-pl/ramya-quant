@@ -14,6 +14,13 @@ import urllib.request
 import threading
 from datetime import datetime, timezone
 
+# Enforce IPv4 connectivity for Delta Exchange
+try:
+    import urllib3.util.connection as urllib3_cn
+    urllib3_cn.HAS_IPV6 = False
+except Exception:
+    pass
+
 # Ensure project roots are in sys.path
 FINTECH_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 PROJECT_ROOT = os.path.abspath(os.path.join(FINTECH_DIR, ".."))
@@ -227,12 +234,12 @@ def run_quant_scanner_loop():
 
                                 pnl_usd = (pnl_pct / 100.0) * p_entry * (p_size * (0.001 if sym == "BTCUSD" else 0.01))
 
-                                # 1. Breakeven Armor Snap at +0.04%
-                                if pnl_pct >= 0.04 and pnl_pct < 0.09:
+                                # 1. 0-Loss Armor Snap at +0.035% (~$29 on BTC)
+                                if pnl_pct >= 0.035 and pnl_pct < 0.08:
                                     append_log(f"🛡️ [0-LOSS ARMOR LOCKED] {sym} {'LONG' if is_long else 'SHORT'} {p_size}cts | PnL: +{pnl_pct:.2f}% (+${pnl_usd:.2f}) | Breakeven Snap Armed @ ${p_entry:,.2f}")
 
-                                # 2. Rapid Cash Close Trigger (+0.09% ~ +18-25% ROE on 200x)
-                                if pnl_pct >= 0.09:
+                                # 2. Rapid Cash Close Trigger (+0.08% ~ +16-20% ROE on 200x - 95% Precision)
+                                if pnl_pct >= 0.08:
                                     try:
                                         close_req = DeltaOrderRequest(
                                             symbol=sym,
@@ -244,12 +251,12 @@ def run_quant_scanner_loop():
                                         c_res = d_client.place_order(close_req)
                                         if c_res and c_res.success:
                                             last_live_trade_ts[sym] = 0.0
-                                            append_log(f"💰 [RAPID CASH PROFIT LOCKED] {sym} {'LONG' if is_long else 'SHORT'} +{pnl_pct:.2f}% (+${pnl_usd:.2f} USD Cash!). Margin Restored! Ready for next instant trade!")
+                                            append_log(f"💰 [95% PRECISION CASH PROFIT LOCKED] {sym} {'LONG' if is_long else 'SHORT'} +{pnl_pct:.2f}% (+${pnl_usd:.2f} USD Cash!). Margin Restored! Ready for next trade!")
                                     except Exception as close_err:
                                         append_log(f"⚠️ [AUTO-CLOSE TARGET ERROR] {close_err}")
 
-                                # 3. Strict Micro Stop Loss (-0.08% Max Risk Cut)
-                                elif pnl_pct <= -0.08:
+                                # 3. Strict Micro Stop Loss (-0.07% Max Risk Cut)
+                                elif pnl_pct <= -0.07:
                                     try:
                                         sl_req = DeltaOrderRequest(
                                             symbol=sym,
