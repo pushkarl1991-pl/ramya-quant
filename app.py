@@ -80,30 +80,39 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Fetch real live Delta Portfolio
+# Fetch real live Delta Portfolio safely without blocking UI
 d_client = DeltaClient(live_enabled=True)
-wallet_res = d_client.get_wallet_balances()
 
-net_equity_usd = 18.35
-avail_bal_usd = 15.40
-user_id = 54634655
+@st.cache_data(ttl=15)
+def get_cached_portfolio():
+    net_eq = 18.35
+    av_bal = 15.40
+    u_id = 54634655
+    b_pos = []
+    e_pos = []
+    try:
+        w_res = d_client.get_wallet_balances()
+        if w_res and w_res.get("success"):
+            meta = w_res.get("meta", {})
+            net_eq = float(meta.get("net_equity", net_eq))
+            for itm in w_res.get("result", []):
+                if itm.get("asset_symbol") == "USD":
+                    av_bal = float(itm.get("available_balance", av_bal))
+                    u_id = itm.get("user_id", u_id)
+                    break
+    except Exception:
+        pass
+    try:
+        b_pos = d_client.get_positions("BTCUSD") or []
+        e_pos = d_client.get_positions("ETHUSD") or []
+    except Exception:
+        pass
+    return net_eq, av_bal, u_id, b_pos, e_pos
 
-if wallet_res and wallet_res.get("success"):
-    meta = wallet_res.get("meta", {})
-    net_equity_usd = float(meta.get("net_equity", 18.35))
-    for itm in wallet_res.get("result", []):
-        if itm.get("asset_symbol") == "USD":
-            avail_bal_usd = float(itm.get("available_balance", avail_bal_usd))
-            user_id = itm.get("user_id", user_id)
-            break
-
+net_equity_usd, avail_bal_usd, user_id, btc_positions, eth_positions = get_cached_portfolio()
+open_pos_count = len(btc_positions) + len(eth_positions)
 net_equity_inr = round(net_equity_usd * 85.0, 2)
 avail_bal_inr = round(avail_bal_usd * 85.0, 2)
-
-# Get live positions
-btc_positions = d_client.get_positions("BTCUSD")
-eth_positions = d_client.get_positions("ETHUSD")
-open_pos_count = len(btc_positions) + len(eth_positions)
 
 # Metric row
 col1, col2, col3, col4 = st.columns(4)

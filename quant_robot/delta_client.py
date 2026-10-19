@@ -136,7 +136,11 @@ class DeltaClient:
         self._sync_product_ids()
 
     def _sync_product_ids(self):
-        """Dynamically fetches all products and populates product cache."""
+        """Dynamically fetches all products or uses instant fallback defaults."""
+        self._product_ids["XAUTUSD"] = 131253
+        self._product_ids["BTCUSD"] = 27
+        self._product_ids["ETHUSD"] = 3136
+        self._product_ids["SOLUSD"] = 14823
         try:
             prods = self.get_products()
             for p in prods:
@@ -147,11 +151,6 @@ class DeltaClient:
                     self._products_cache[symbol] = p
         except Exception as e:
             logger.warning(f"Could not initialize product IDs from API: {e}. Using fallback defaults.")
-            # Default fallback product IDs for Delta India
-            self._product_ids["XAUTUSD"] = 131253
-            self._product_ids["BTCUSD"] = 27
-            self._product_ids["ETHUSD"] = 3136
-            self._product_ids["SOLUSD"] = 14823
 
     def resolve_symbol(self, symbol: str) -> str:
         """
@@ -249,11 +248,11 @@ class DeltaClient:
         params: Optional[Dict[str, Any]] = None,
         data: Optional[Dict[str, Any]] = None,
         is_private: bool = False,
-        max_retries: int = 3,
-        backoff_factor: float = 1.5,
+        max_retries: int = 1,
+        backoff_factor: float = 1.0,
     ) -> Dict[str, Any]:
         """
-        Executes HTTP request with exponential backoff for 24x7 resilience.
+        Executes HTTP request with fast timeout for cloud resilience.
         """
         clean_base = self.base_url[:-3] if (self.base_url.endswith("/v2") and path.startswith("/v2")) else self.base_url
         url = f"{clean_base}{path}"
@@ -271,13 +270,13 @@ class DeltaClient:
         for attempt in range(1, max_retries + 1):
             try:
                 if method.upper() == "GET":
-                    resp = self.session.get(url, params=params, headers=headers, timeout=10)
+                    resp = self.session.get(url, params=params, headers=headers, timeout=2.5)
                 elif method.upper() == "POST":
-                    resp = self.session.post(url, data=payload_str, headers=headers, timeout=10)
+                    resp = self.session.post(url, data=payload_str, headers=headers, timeout=2.5)
                 elif method.upper() == "PUT":
-                    resp = self.session.put(url, data=payload_str, headers=headers, timeout=10)
+                    resp = self.session.put(url, data=payload_str, headers=headers, timeout=2.5)
                 elif method.upper() == "DELETE":
-                    resp = self.session.delete(url, params=params, data=payload_str, headers=headers, timeout=10)
+                    resp = self.session.delete(url, params=params, data=payload_str, headers=headers, timeout=2.5)
                 else:
                     raise ValueError(f"Unsupported HTTP method: {method}")
 
