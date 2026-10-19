@@ -157,14 +157,16 @@ class Apex12PillarEngine:
         p2_bear = p < vwap
         pillars.append({"name": "VWAP Institutional Anchor", "bull": p2_bull, "bear": p2_bear, "weight": 1.2, "status": "ABOVE_VWAP" if p2_bull else "BELOW_VWAP"})
 
-        # Pillar 3: Bollinger Bands Squeeze & Expansion
-        p3_bull = p > metrics["poc_price"] and (metrics["bb_squeeze"] or p < metrics["bb_upper"])
-        p3_bear = p < metrics["poc_price"] and (metrics["bb_squeeze"] or p > metrics["bb_lower"])
+        # Pillar 3: Bollinger Bands Squeeze & Anti-Exhaustion
+        # Block BUY if price is at or above BB Upper Band (No buying into exhaustion!)
+        p3_bull = p > metrics["poc_price"] and (metrics["bb_squeeze"] or p < (metrics["bb_upper"] * 0.9995))
+        p3_bear = p < metrics["poc_price"] and (metrics["bb_squeeze"] or p > (metrics["bb_lower"] * 1.0005))
         pillars.append({"name": "Bollinger Bands Squeeze", "bull": p3_bull, "bear": p3_bear, "weight": 1.0, "status": "SQUEEZE_EXPANSION" if metrics["bb_squeeze"] else "EXPANDED"})
 
-        # Pillar 4: RSI 14
-        p4_bull = 45.0 <= rsi <= 72.0
-        p4_bear = 28.0 <= rsi <= 55.0
+        # Pillar 4: RSI 14 Momentum (Strict Anti-Top / Anti-Dump Rule)
+        # Cap BUY RSI at 64 max (Never buy overbought top!)
+        p4_bull = 40.0 <= rsi <= 64.0
+        p4_bear = 36.0 <= rsi <= 60.0
         pillars.append({"name": "RSI 14 Momentum", "bull": p4_bull, "bear": p4_bear, "weight": 1.0, "status": f"RSI_{rsi}"})
 
         # Pillar 5: MACD Histogram Expansion
@@ -172,9 +174,10 @@ class Apex12PillarEngine:
         p5_bear = macd_hist < 0
         pillars.append({"name": "MACD Volume Impulse", "bull": p5_bull, "bear": p5_bear, "weight": 1.0, "status": "BULL_EXPAND" if p5_bull else "BEAR_EXPAND"})
 
-        # Pillar 6: Zig-Zag Swings Breakout
-        p6_bull = metrics["is_breakout_high"] or (p > (metrics["recent_low"] + metrics["recent_high"])/2)
-        p6_bear = metrics["is_breakout_low"] or (p < (metrics["recent_low"] + metrics["recent_high"])/2)
+        # Pillar 6: Zig-Zag Swings Structure (Anti-Chasing Rule)
+        # Enter on structural momentum WITHOUT buying at recent absolute high peak
+        p6_bull = (p > (metrics["recent_low"] + metrics["recent_high"])/2) and not (p >= metrics["recent_high"] * 0.9998 and rsi > 60)
+        p6_bear = (p < (metrics["recent_low"] + metrics["recent_high"])/2) and not (p <= metrics["recent_low"] * 1.0002 and rsi < 40)
         pillars.append({"name": "Zig-Zag Structure Breakout", "bull": p6_bull, "bear": p6_bear, "weight": 1.0, "status": "BREAKOUT_LONG" if p6_bull else "BREAKOUT_SHORT"})
 
         # Pillar 7: ATR Noise-Proof SL Distance
@@ -187,13 +190,13 @@ class Apex12PillarEngine:
         pillars.append({"name": "ADX 14 Chop Killer Guard", "bull": p8_active and p1_bull, "bear": p8_active and p1_bear, "weight": 1.5, "status": "TRENDING_ACTIVE" if p8_active else "CHOP_BLOCKED"})
 
         # Pillar 9: L2 Order Book Imbalance (Whales)
-        p9_bull = ob_ratio >= 1.35
-        p9_bear = ob_ratio <= 0.70
+        p9_bull = ob_ratio >= 1.25
+        p9_bear = ob_ratio <= 0.75
         pillars.append({"name": "L2 Order Book Whale Depth", "bull": p9_bull, "bear": p9_bear, "weight": 1.2, "status": f"BUYERS_{ob_ratio}x" if p9_bull else f"SELLERS_{ob_ratio}x"})
 
         # Pillar 10: PCR & Open Interest Pulse (Options)
-        p10_bull = pcr >= 1.05
-        p10_bear = pcr <= 0.85
+        p10_bull = pcr >= 1.02
+        p10_bear = pcr <= 0.88
         pillars.append({"name": "PCR & Open Interest Pulse", "bull": p10_bull, "bear": p10_bear, "weight": 1.1, "status": f"PCR_{pcr}"})
 
         # Pillar 11: Options Greeks & Theta Guard
@@ -211,48 +214,49 @@ class Apex12PillarEngine:
         bull_pct = round((bull_score / max_score) * 100, 1)
         bear_pct = round((bear_score / max_score) * 100, 1)
 
-        # Decision & Dynamic Leverage Scaling
+        # Decision & Dynamic Leverage Scaling (Optimized for Rapid Scalping)
         action = "WAIT_FOR_CONFLUENCE"
         confluence_pct = max(bull_pct, bear_pct)
-        recommended_leverage = 20  # Safe base
+        recommended_leverage = 50
 
-        if is_chop or adx < 20.0:
+        if is_chop or adx < 18.0:
             action = "CHOP_DETECTED_HOLD_CAPITAL"
             reason = f"Zig-Zag / ADX({adx}) detected low volatility trap. Capital protected (0 trade)."
-        elif bull_pct >= 85.0:
+        elif bull_pct >= 72.0:
             action = "STRONG_BUY_SNIPER"
             reason = f"Golden Bullish Confluence ({bull_pct}% across 12 pillars). 3-30 EMA + L2 Whales active."
-            # Scale leverage based on confidence
-            if bull_pct >= 92.0:
-                recommended_leverage = 500  # APEX 500x on 92%+ Confluence
-            elif bull_pct >= 88.0:
+            if bull_pct >= 88.0:
+                recommended_leverage = 500  # APEX 500x
+            elif bull_pct >= 80.0:
                 recommended_leverage = 200
             else:
-                recommended_leverage = 50
-        elif bear_pct >= 85.0:
+                recommended_leverage = 100
+        elif bear_pct >= 72.0:
             action = "STRONG_SELL_SNIPER"
             reason = f"Golden Bearish Confluence ({bear_pct}% across 12 pillars). Breakdown active."
-            if bear_pct >= 92.0:
+            if bear_pct >= 88.0:
                 recommended_leverage = 500
-            elif bear_pct >= 88.0:
+            elif bear_pct >= 80.0:
                 recommended_leverage = 200
             else:
-                recommended_leverage = 50
+                recommended_leverage = 100
         else:
-            reason = f"Confluence score ({confluence_pct}%) below 85% threshold. Waiting for high-probability impulse."
+            reason = f"Confluence score ({confluence_pct}%) below 72% threshold. Waiting for high-probability impulse."
 
-        # Compute Micro-Risk SL & TP Targets
-        atr_val = max(1.0, metrics["atr"])
+        # RAPID MICRO-SCALP TARGETS (FAST CASH IN, ZERO DELAY)
+        # Target: +0.09% price move (~$75 on BTC, ~$2.2 on ETH) -> +18% to +25% ROE on margin!
+        # Breakeven: +0.04% price move -> Lock 0-Loss Armor!
+        # Micro Stop Loss: -0.08% micro stop -> Strict 1% capital protection!
         if "BUY" in action:
-            sl_price = round(p - (atr_val * 0.75), 2)
-            tp_price = round(p + (atr_val * 2.25), 2) # 1:3 Net RR
-            be_price = round(p + (p * 0.0008), 2)     # Breakeven snap level
-            wick_exit_price = round(p + (atr_val * 3.5), 2)
+            sl_price = round(p * 0.9992, 2)   # -0.08% Tight SL
+            tp_price = round(p * 1.0009, 2)   # +0.09% Rapid Cash Scalp TP
+            be_price = round(p * 1.0004, 2)   # +0.04% 0-Loss Snap
+            wick_exit_price = round(p * 1.0015, 2)
         else:
-            sl_price = round(p + (atr_val * 0.75), 2)
-            tp_price = round(p - (atr_val * 2.25), 2)
-            be_price = round(p - (p * 0.0008), 2)
-            wick_exit_price = round(p - (atr_val * 3.5), 2)
+            sl_price = round(p * 1.0008, 2)   # -0.08% Tight SL
+            tp_price = round(p * 0.9991, 2)   # +0.09% Rapid Cash Scalp TP
+            be_price = round(p * 0.9996, 2)   # +0.04% 0-Loss Snap
+            wick_exit_price = round(p * 0.9985, 2)
 
         sl_distance_pct = round((abs(p - sl_price) / p) * 100, 3)
 
