@@ -168,7 +168,7 @@ def run_quant_scanner_loop():
 
                 # 24/7 RAPID SCALPING EXECUTION (72%+ CONFLUENCE - FREQUENT TRADE GENERATION)
                 if confluence >= 72.0 and not metrics["is_chop_market"] and "SNIPER" in action:
-                    if (time.time() - last_live_trade_ts.get(sym, 0.0)) > 15.0:
+                    if (time.time() - last_live_trade_ts.get(sym, 0.0)) > 8.0:
                         try:
                             from quant_robot.delta_client import DeltaClient, DeltaOrderRequest
                             d_client = DeltaClient(live_enabled=True)
@@ -176,24 +176,23 @@ def run_quant_scanner_loop():
                             
                             is_big_candle = eval_res.get("big_candle_impulse", False) or confluence >= 88.0
                             if is_big_candle:
-                                append_log(f"⚡ [RAPID MOMENTUM DETECTED] {sym}: Squeeze Breakout + Whale Flow! Scaling to MAXIMUM Lot Size!")
+                                append_log(f"⚡ [RAPID MOMENTUM DETECTED] {sym}: Squeeze Breakout + Whale Flow! Scaling to 200x High-Velocity Lot Size!")
 
-                            # Fee-Optimized Safe Lot Sizing for ~$15-50 Wallet
-                            # Keeps commissions tiny ($0.05-$0.10) so profits stay in your pocket!
+                            # 200x Leverage High-Velocity Lot Sizing for $12-$50 Growth
                             if sym == "ETHUSD":
-                                if is_big_candle or confluence >= 90.0:
-                                    scaled_size = 10  # 10 contracts (~$240 notional, ~$1.60 margin)
-                                elif confluence >= 80.0:
-                                    scaled_size = 6   # 6 contracts (~$145 notional, ~$1.00 margin)
+                                if is_big_candle or confluence >= 88.0:
+                                    scaled_size = 12  # 12 contracts (~$290 notional, ~$1.45 margin)
+                                elif confluence >= 78.0:
+                                    scaled_size = 8   # 8 contracts (~$194 notional, ~$0.97 margin)
                                 else:
-                                    scaled_size = 4   # 4 contracts (~$97 notional, ~$0.65 margin)
+                                    scaled_size = 5   # 5 contracts (~$121 notional, ~$0.60 margin)
                             else: # BTCUSD
-                                if is_big_candle or confluence >= 90.0:
-                                    scaled_size = 3   # 3 contracts (~$248 notional, ~$1.65 margin)
-                                elif confluence >= 80.0:
-                                    scaled_size = 2   # 2 contracts (~$165 notional, ~$1.10 margin)
+                                if is_big_candle or confluence >= 88.0:
+                                    scaled_size = 5   # 5 contracts (~$413 notional, ~$2.06 margin)
+                                elif confluence >= 78.0:
+                                    scaled_size = 4   # 4 contracts (~$330 notional, ~$1.65 margin)
                                 else:
-                                    scaled_size = 2   # 2 contracts (~$165 notional, ~$1.10 margin)
+                                    scaled_size = 3   # 3 contracts (~$248 notional, ~$1.24 margin)
 
                             order_req = DeltaOrderRequest(
                                 symbol=sym,
@@ -204,7 +203,7 @@ def run_quant_scanner_loop():
                             res = d_client.place_order(order_req)
                             if res and res.success and not res.is_paper:
                                 last_live_trade_ts[sym] = time.time()
-                                append_log(f"🚀 [REAL DELTA AUTO-STRIKE FILLED] {sym} {order_side.upper()} {scaled_size} Contracts (ID: {res.order_id}) at ${mark_price:,.2f} | 2-Tier Runner System Armed!")
+                                append_log(f"🚀 [REAL DELTA AUTO-STRIKE FILLED] {sym} {order_side.upper()} {scaled_size} Contracts (ID: {res.order_id}) at ${mark_price:,.2f} | 200x Apex 2-Tier Engine Active!")
                             elif res and not res.success:
                                 append_log(f"⚠️ [DELTA ORDER REJECTED] {sym}: {res.error_message}")
                         except Exception as e:
